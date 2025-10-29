@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Year 7 Research Page | Operating Systems</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+      color: #e2e8f0;
+    }
+    .content-box {
+      background-color: rgba(15, 23, 42, 0.85);
+      border: 1px solid #334155;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 0 20px rgba(30, 64, 175, 0.2);
+    }
+    a {
+      color: #60a5fa;
+    }
+    a:hover {
+      color: #93c5fd;
+    }
+    .research-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      text-decoration: underline;
+      transition: all 0.2s;
+    }
+    .research-link:hover {
+      color: #3b82f6;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen font-sans">
+  <!-- HEADER -->
+  <header class="border-b border-gray-700 p-4 flex items-center justify-between bg-gray-900 bg-opacity-80 sticky top-0 z-10">
+    <a href="home.html" class="flex items-center text-blue-400 hover:text-blue-300 transition">
+      <i data-feather="chevron-left" class="w-5 h-5 mr-1"></i> Back to Operating Systems
+    </a>
+    <h1 class="text-xl sm:text-2xl font-bold text-yellow-400 text-center flex-grow">
+      Year 7 Research Page – Operating Systems
+    </h1>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-4xl mx-auto p-6 space-y-10 mt-6">
+
+    <section class="content-box">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-2">1. What is an Operating System?</h2>
+      <p>An <strong>Operating System (OS)</strong> is the main software that controls the computer. It manages the hardware and allows users to run other programs such as games, browsers, and word processors.</p>
+      <ul class="list-disc list-inside mt-3 space-y-1">
+        <li>Examples: Windows, Mac OS, Linux, Android, iOS</li>
+      </ul>
+      <a href="https://www.bbc.co.uk/bitesize/guides/zp92mp3/revision/1" target="_blank" class="research-link">🔗 Learn more on BBC Bitesize</a>
+    </section>
+
+    <section class="content-box">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-2">2. Hardware vs Software</h2>
+      <table class="w-full border border-gray-700 text-sm sm:text-base">
+        <thead class="bg-gray-800">
+          <tr>
+            <th class="p-2 border border-gray-700">Term</th>
+            <th class="p-2 border border-gray-700">Meaning</th>
+            <th class="p-2 border border-gray-700">Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-2 border border-gray-700">Hardware</td>
+            <td class="p-2 border border-gray-700">Physical parts of the computer</td>
+            <td class="p-2 border border-gray-700">Keyboard, screen, mouse</td>
+          </tr>
+          <tr>
+            <td class="p-2 border border-gray-700">Software</td>
+            <td class="p-2 border border-gray-700">Programs that tell the computer what to do</td>
+            <td class="p-2 border border-gray-700">Games, browsers, Word</td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="https://www.bbc.co.uk/bitesize/topics/zs7s4wx/articles/z23k4wx" target="_blank" class="research-link">🔗 Hardware vs Software (BBC Bitesize)</a>
+    </section>
+
+    <section class="content-box">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-2">3. What Does an OS Do?</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li>🎨 Provides a <strong>user interface</strong> (GUI or CLI)</li>
+        <li>🧠 Handles <strong>memory</strong> and <strong>multitasking</strong></li>
+        <li>🖱️ Controls <strong>hardware devices</strong></li>
+        <li>🗂️ Manages <strong>files</strong> and <strong>security</strong></li>
+      </ul>
+      <a href="https://edu.gcfglobal.org/en/computerbasics/understanding-operating-systems/1/" target="_blank" class="research-link">🔗 Interactive tutorial (GCF Global)</a>
+    </section>
+
+    <section class="content-box">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-2">4. Types of User Interface</h2>
+      <p><strong>GUI (Graphical User Interface):</strong> Uses pictures, icons, and windows.<br>
+         <strong>CLI (Command Line Interface):</strong> Uses typed text commands.</p>
+      <div class="mt-3 space-x-2">
+        <a href="https://www.bbc.co.uk/bitesize/guides/z8ngr82/revision/3" target="_blank" class="research-link">🔗 GUI vs CLI (BBC Bitesize)</a>
+        <a href="https://www.youtube.com/watch?v=ptjIGtGzGPI" target="_blank" class="research-link">▶️ Watch: GUI vs CLI Explained</a>
+      </div>
+    </section>
+
+    <section class="content-box">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-2">5. Device Drivers</h2>
+      <p>A <strong>device driver</strong> is a small program that helps the OS communicate with devices like printers, mice, and cameras. Without the correct driver, the device might not work properly.</p>
+      <a href="https://computer.howstuffworks.com/device-driver.htm" target="_blank" class="research-link">🔗 Learn more: Device Drivers (HowStuffWorks)</a>
+    </section>
+
+    <section class="content-box">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-2">6. Booting Up</h2>
+      <p>When you turn on your computer, it performs a <strong>boot routine</strong> — checking hardware and loading the OS.</p>
+      <ul class="list-disc list-inside">
+        <li><strong>Cold boot:</strong> Turning the computer on</li>
+        <li><strong>Warm boot:</strong> Restarting the computer</li>
+      </ul>
+      <a href="https://www.techopedia.com/definition/5417/booting" target="_blank" class="research-link">🔗 What is Booting? (Techopedia)</a>
+    </section>
+
+    <section class="content-box">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-2">7. Desktop vs Mobile Operating Systems</h2>
+      <ul class="list-disc list-inside">
+        <li><strong>Desktop:</strong> Windows, Mac OS, Linux</li>
+        <li><strong>Mobile:</strong> Android, iOS</li>
+      </ul>
+      <a href="https://www.bbc.co.uk/bitesize/guides/zp92mp3/revision/4" target="_blank" class="research-link">🔗 Compare Desktop & Mobile OS (BBC Bitesize)</a>
+    </section>
+
+    <section class="content-box bg-gray-800">
+      <h2 class="text-2xl font-semibold text-yellow-400 mb-3">8. Quick Quiz 🧠</h2>
+      <ol class="list-decimal list-inside space-y-1">
+        <li>What is the main job of an operating system?</li>
+        <li>What is the difference between hardware and software?</li>
+        <li>Name two desktop and two mobile operating systems.</li>
+        <li>What is a GUI?</li>
+        <li>What is a device driver?</li>
+      </ol>
+      <p class="mt-3 text-sm text-gray-400">💡 Hint: Use the links above to find the answers!</p>
+    </section>
+
+    <!-- Return Button -->
+    <div class="text-center mt-10">
+      <a href="home.html"
+         class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all flex items-center justify-center mx-auto w-full sm:w-auto">
+        <i data-feather="arrow-left-circle" class="w-5 h-5 mr-2"></i> Back to Operating Systems
+      </a>
+    </div>
+	
+	<!-- Floating Glowing Back Button -->
+<a href="index.html"
+   class="group fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50">
+  <i data-feather="home" class="w-6 h-6 group-hover:text-yellow-300 transition-colors"></i>
+  <span class="sr-only">Back to Main Page</span>
+</a>
+
+  <!-- Operating Systems Assessment Button -->
+<div class="text-center mt-8 mb-6">
+  <a href="operatingsystemsassessment.html"
+     class="group relative inline-flex items-center justify-center px-8 py-3 font-bold text-white rounded-lg overflow-hidden 
+            bg-gradient-to-r from-green-600 via-green-500 to-green-700 
+            shadow-[0_0_15px_rgba(34,197,94,0.5)] 
+            hover:shadow-[0_0_25px_rgba(34,197,94,0.8)] 
+            transition-all duration-300 ease-out hover:scale-105">
+    
+    <span class="absolute inset-0 bg-gradient-to-r from-green-400 via-green-500 to-green-600 opacity-0 
+                  group-hover:opacity-100 blur-lg transition-opacity duration-300"></span>
+    
+    <i data-feather="clipboard-check" class="relative w-5 h-5 mr-2 text-yellow-300"></i>
+    <span class="relative z-10">Start Operating Systems Assessment</span>
+  </a>
+</div>
+
+<!-- Floating Assessment Button -->
+<a href="operatingsystemsassessment.html"
+   class="group fixed bottom-20 right-6 p-4 rounded-full bg-green-600 text-white 
+          shadow-[0_0_20px_rgba(34,197,94,0.5)] 
+          hover:shadow-[0_0_35px_rgba(34,197,94,0.9)] 
+          transition-all duration-300 hover:scale-110 z-50"
+   title="Go to Assessment">
+  <i data-feather="clipboard-check" class="w-6 h-6 group-hover:text-yellow-300 transition-colors"></i>
+  <span class="sr-only">Go to Assessment</span>
+</a>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 text-center p-4 text-sm mt-10 border-t border-gray-700">
+    © 2025 KS3 Computing – Operating Systems | Designed for Year 7 Students
+  </footer>
+
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script>
+    feather.replace();
+  </script>
+</body>
+</html>

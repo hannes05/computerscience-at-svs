@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Breaker | OS Quest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
+  <style>
+    .terminal-bg {
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .code-block {
+      font-family: 'Courier New', monospace;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-left: 3px solid #3b82f6;
+      word-wrap: break-word;
+    }
+
+    .glow-correct {
+      box-shadow: 0 0 15px rgba(74, 222, 128, 0.7);
+    }
+
+    .glow-wrong {
+      box-shadow: 0 0 15px rgba(248, 113, 113, 0.7);
+    }
+
+    .mc-option {
+      transition: all 0.2s ease-in-out;
+    }
+
+    .mc-correct {
+      background-color: rgba(74, 222, 128, 0.2);
+      border-color: #4ade80;
+      box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+    }
+
+    .mc-incorrect {
+      background-color: rgba(248, 113, 113, 0.2);
+      border-color: #f87171;
+      box-shadow: 0 0 8px rgba(248, 113, 113, 0.5);
+    }
+
+    @media (max-width: 640px) {
+      #wordBank {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  </style>
+</head>
+
+<body class="terminal-bg dark:bg-gray-900 dark:text-gray-100 bg-gray-100 text-gray-900 min-h-screen">
+  <div class="container mx-auto px-4 py-8 sm:py-12">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-10 text-center sm:text-left space-y-4 sm:space-y-0">
+      <a href="home.html" class="flex items-center justify-center text-blue-400 hover:text-blue-300 transition">
+        <i data-feather="chevron-left" class="w-5 h-5 mr-1"></i> Back to Operating Systems
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <span class="text-yellow-400 flex items-center">
+          <i data-feather="star" class="w-5 h-5 mr-1"></i> 150 XP
+        </span>
+        <span class="text-blue-400 flex items-center">
+          <i data-feather="battery" class="w-5 h-5 mr-1"></i> 3/3 Lives
+        </span>
+        <!-- Dark Mode Toggle -->
+        <button id="themeToggle" class="ml-4 p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition" title="Toggle Dark/Light Mode">
+          <i data-feather="sun" id="themeIcon"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="text-center mb-10 sm:mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">CODE BREAKER</h1>
+      <p class="text-base sm:text-lg text-blue-300 dark:text-blue-300 text-blue-700 max-w-2xl mx-auto">
+        Repair the corrupted OS files and answer the security questions to gain full access.
+      </p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="max-w-4xl mx-auto bg-gray-900 dark:bg-gray-900 bg-opacity-90 p-6 sm:p-8 rounded-lg shadow-xl border border-gray-700">
+
+      <!-- Section 1 -->
+      <h2 class="text-xl sm:text-2xl font-bold mb-6 text-green-400 border-b border-gray-700 pb-2 flex items-center">
+        <i data-feather="terminal" class="w-6 h-6 mr-2"></i> Section 1: Drag & Drop File Repair
+      </h2>
+
+      <!-- Word Bank -->
+      <div class="mb-8 p-4 bg-gray-800 rounded-lg">
+        <h3 class="text-base sm:text-lg font-bold mb-3 text-blue-300 flex items-center">
+          <i data-feather="archive" class="w-5 h-5 mr-2"></i> Word Bank
+        </h3>
+        <div class="flex flex-wrap gap-3" id="wordBank">
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">device driver</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">operating system</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">hardware</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">system</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">graphical user interface</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">kernel</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">command line interface</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">multitasking</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">protocol</span>
+          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">software</span>
+        </div>
+      </div>
+
+      <!-- File Repair Questions -->
+      <div class="space-y-6 text-sm sm:text-base">
+        <div class="code-block p-4 rounded-lg">
+          The <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="operating system">_____</span> manages the
+          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="hardware">_____</span> and
+          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="software">_____</span> resources of a computer.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          The <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="kernel">_____</span> is the core part of the
+          operating system that controls everything in the system.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          A <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="device driver">_____</span> acts as a translator
+          between the OS and a piece of hardware.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          A <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="graphical user interface">_____</span> allows users
+          to interact with icons and windows instead of typing text commands.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          The <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="command line interface">_____</span> lets users
+          type specific text commands to control the computer.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          An operating system that can run multiple programs at once is said to support
+          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="multitasking">_____</span>.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          Network communication between systems is managed using a set of rules known as a
+          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="protocol">_____</span>.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          A computer’s physical components, such as the CPU and memory, are referred to as
+          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="hardware">_____</span>.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          Programs and data that run on the computer are called
+          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="software">_____</span>.
+        </div>
+
+        <div class="code-block p-4 rounded-lg">
+          Together, hardware and software form a complete computer
+          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="system">_____</span>.
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="mt-10 text-center">
+        <button id="submitBtn"
+          class="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all flex items-center justify-center mx-auto">
+          <i data-feather="check-circle" class="w-5 h-5 mr-2"></i> Verify File Repair
+        </button>
+      </div>
+    </div>
+  </div>
+
+<!-- Floating Glowing Back Button -->
+<a href="index.html"
+   class="group fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50">
+  <i data-feather="home" class="w-6 h-6 group-hover:text-yellow-300 transition-colors"></i>
+  <span class="sr-only">Back to Main Page</span>
+</a>
+
+
+  <!-- JavaScript -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      feather.replace();
+
+      // Theme toggle
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const html = document.documentElement;
+
+      themeToggle.addEventListener('click', () => {
+        html.classList.toggle('dark');
+        themeIcon.setAttribute('data-feather', html.classList.contains('dark') ? 'sun' : 'moon');
+        feather.replace();
+      });
+
+      // Drag and Drop
+      const draggableWords = document.querySelectorAll('.draggable-word');
+      const blankDrops = document.querySelectorAll('.blank-drop');
+
+      draggableWords.forEach(word => {
+        word.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', word.textContent);
+          word.classList.add('opacity-50');
+        });
+        word.addEventListener('dragend', () => word.classList.remove('opacity-50'));
+      });
+
+      blankDrops.forEach(blank => {
+        blank.addEventListener('dragover', e => e.preventDefault());
+        blank.addEventListener('drop', e => {
+          e.preventDefault();
+          const data = e.dataTransfer.getData('text/plain');
+          blank.textContent = data;
+          blank.dataset.currentWord = data;
+        });
+      });
+
+      // Submit answers
+      document.getElementById('submitBtn').addEventListener('click', () => {
+        let correct = 0;
+        blankDrops.forEach(blank => {
+          const user = (blank.dataset.currentWord || '').trim().toLowerCase();
+          const ans = blank.dataset.answer.trim().toLowerCase();
+          blank.classList.remove('bg-green-800', 'bg-red-800', 'glow-correct', 'glow-wrong');
+          if (user === ans) {
+            blank.classList.add('bg-green-800', 'glow-correct');
+            correct++;
+          } else {
+            blank.classList.add('bg-red-800', 'glow-wrong');
+          }
+        });
+        alert(`You got ${correct}/${blankDrops.length} correct.`);
+      });
+    });
+  </script>
+</body>
+</html>

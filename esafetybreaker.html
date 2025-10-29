@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security Challenge | E-Safety Quest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
+  <style>
+    .terminal-bg {
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .scenario-card {
+      background-color: rgba(0, 0, 0, 0.7);
+      border-left: 3px solid #3b82f6;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-card:hover {
+      border-left-color: #60a5fa;
+      transform: translateX(4px);
+    }
+
+    .option-btn {
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+    }
+
+    .option-correct {
+      background-color: rgba(74, 222, 128, 0.2);
+      border-color: #4ade80;
+      box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+    }
+
+    .option-incorrect {
+      background-color: rgba(248, 113, 113, 0.2);
+      border-color: #f87171;
+      box-shadow: 0 0 8px rgba(248, 113, 113, 0.5);
+    }
+
+    .social-post {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-tag {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid #3b82f6;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      margin: 0.25rem;
+    }
+  </style>
+</head>
+
+<body class="terminal-bg dark:bg-gray-900 dark:text-gray-100 bg-gray-100 text-gray-900 min-h-screen">
+  <div class="container mx-auto px-4 py-8 sm:py-12">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-10 text-center sm:text-left space-y-4 sm:space-y-0">
+      <a href="home-esafety.html" class="flex items-center justify-center text-blue-400 hover:text-blue-300 transition">
+        <i data-feather="chevron-left" class="w-5 h-5 mr-1"></i> Back to E-Safety
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <!-- Dark Mode Toggle -->
+        <button id="themeToggle" class="ml-4 p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition" title="Toggle Dark/Light Mode">
+          <i data-feather="sun" id="themeIcon"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="text-center mb-10 sm:mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">SECURITY CHALLENGE</h1>
+      <p class="text-base sm:text-lg text-blue-300 dark:text-blue-300 text-blue-700 max-w-2xl mx-auto">
+        Test your knowledge of digital safety and data protection.
+      </p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="max-w-4xl mx-auto bg-gray-900 dark:bg-gray-900 bg-opacity-90 p-6 sm:p-8 rounded-lg shadow-xl border border-gray-700">
+
+      <!-- Section 1: True/False Scenarios -->
+      <h2 class="text-xl sm:text-2xl font-bold mb-6 text-green-400 border-b border-gray-700 pb-2 flex items-center">
+        <i data-feather="check-square" class="w-6 h-6 mr-2"></i> Section 1: True or False?
+      </h2>
+
+      <div class="space-y-4 mb-10">
+        <!-- Statement 1 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">1. A website shows the average GCSE results for schools. It needs to store this data securely or it could face a fine under the Data Protection Act.</p>
+          <div class="flex gap-3">
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q1" data-answer="false">
+              False
+            </button>
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q1" data-answer="true">
+              True
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-q1"></p>
+        </div>
+
+        <!-- Statement 2 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">2. Personal data stored on USB sticks and SD cards are exempt from the Data Protection Act because they are removable media.</p>
+          <div class="flex gap-3">
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q2" data-answer="false">
+              False
+            </button>
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q2" data-answer="true">
+              True
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-q2"></p>
+        </div>
+
+        <!-- Statement 3 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">3. If I log in as a 'guest' on a shopping website, I can't be a victim of identity fraud.</p>
+          <div class="flex gap-3">
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q3" data-answer="false">
+              False
+            </button>
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q3" data-answer="true">
+              True
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-q3"></p>
+        </div>
+
+        <!-- Statement 4 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">4. If an organisation gets hacked and my personal details are stolen, the company can be fined.</p>
+          <div class="flex gap-3">
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q4" data-answer="true">
+              True
+            </button>
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q4" data-answer="false">
+              False
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-q4"></p>
+        </div>
+
+        <!-- Statement 5 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">5. It's OK for organisations to pass your data on to other organisations if they ask your permission first.</p>
+          <div class="flex gap-3">
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q5" data-answer="true">
+              True
+            </button>
+            <button class="option-btn flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent" data-question="q5" data-answer="false">
+              False
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-q5"></p>
+        </div>
+      </div>
+
+      <!-- Section 2: Social Media Analysis -->
+      <h2 class="text-xl sm:text-2xl font-bold mb-6 text-green-400 border-b border-gray-700 pb-2 flex items-center">
+        <i data-feather="users" class="w-6 h-6 mr-2"></i> Section 2: Social Media Safety Analysis
+      </h2>
+
+      <div class="mb-6 p-4 bg-yellow-900 bg-opacity-30 border border-yellow-700 rounded-lg">
+        <p class="text-sm text-yellow-300"><strong>📱 Scenario:</strong> Below is a social media profile for Alice Matthews. Analyze the posts and identify what personal information can be discovered.</p>
+      </div>
+
+      <!-- Social Media Profile -->
+      <div class="bg-gray-800 rounded-lg p-4 mb-6">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+            <span class="text-xl font-bold">AM</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg">Alice Matthews</h3>
+            <p class="text-sm text-gray-400">@alicematthews • Public Profile</p>
+          </div>
+        </div>
+
+        <!-- Post 1 -->
+        <div class="social-post">
+          <p class="text-sm text-gray-400 mb-2">8th April 10:08 • Sent to Joan Morse</p>
+          <p>Happy 70th Birthday Grandma! 🎂🎉</p>
+        </div>
+
+        <!-- Post 2 -->
+        <div class="social-post">
+          <p class="text-sm text-gray-400 mb-2">9th April 14:17 • Nadia Simmons Posted</p>
+          <p class="mb-2">Haha this made me think of you Little Miss Purple!!</p>
+          <div class="w-full h-32 bg-purple-600 rounded flex items-center justify-center">
+            <p class="text-white font-bold">🏠 House decorated entirely in purple</p>
+          </div>
+        </div>
+
+        <!-- Post 3 -->
+        <div class="social-post">
+          <p class="text-sm text-gray-400 mb-2">9th April 20:57 • You commented</p>
+          <p class="mb-2">Looooong weekend... glad to be home! Can't wait to go to Tenerife next week. ✈️</p>
+          <div class="w-full h-24 bg-gray-700 rounded flex items-center justify-center text-sm">
+            <p>📍 Location: Trinity Road (A214), Wandsworth, London</p>
+          </div>
+        </div>
+
+        <!-- Post 4 -->
+        <div class="social-post">
+          <p class="text-sm text-gray-400 mb-2">15th April 7:48 • Vishal posted</p>
+          <p>Happy Birthday! Finally old enough for a social media account! 🎂</p>
+        </div>
+      </div>
+
+      <!-- Analysis Questions -->
+      <div class="mb-10">
+        <h3 class="text-lg font-semibold mb-4 text-blue-300">What information can you discover about Alice?</h3>
+        <p class="text-sm text-gray-400 mb-4">Click on the information you can identify from the posts:</p>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="name">Full Name</button>
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="birthday">Birthday</button>
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="age">Current Age</button>
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="location">Home Location</button>
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="grandma">Grandma's Name</button>
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="friend">Friend's Name</button>
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="holiday">Holiday Plans</button>
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="color">Favorite Color</button>
+          <button class="info-tag cursor-pointer hover:bg-blue-600 transition" data-info="school">School Name</button>
+        </div>
+
+        <div id="selected-info" class="mt-4 p-3 bg-gray-800 rounded-lg hidden">
+          <p class="text-sm font-semibold text-green-400 mb-2">✓ Information Identified:</p>
+          <div id="info-list" class="text-sm space-y-1"></div>
+        </div>
+      </div>
+
+      <!-- Section 3: Scenario-Based Questions -->
+      <h2 class="text-xl sm:text-2xl font-bold mb-6 text-green-400 border-b border-gray-700 pb-2 flex items-center">
+        <i data-feather="alert-triangle" class="w-6 h-6 mr-2"></i> Section 3: What Would You Do?
+      </h2>
+
+      <div class="space-y-4 mb-10">
+        <!-- Scenario 1 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">📧 You receive an email saying you've won £500. It asks for your bank details. What should you do?</p>
+          <div class="space-y-2">
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s1" data-answer="correct">
+              Delete the email - it's likely a phishing scam
+            </button>
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s1" data-answer="wrong">
+              Reply with my bank details to claim the prize
+            </button>
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s1" data-answer="wrong">
+              Forward it to all my friends so they can win too
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-s1"></p>
+        </div>
+
+        <!-- Scenario 2 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">🗑️ Your family is throwing away old bank statements. What's the safest way to dispose of them?</p>
+          <div class="space-y-2">
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s2" data-answer="wrong">
+              Put them in the recycling bin
+            </button>
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s2" data-answer="correct">
+              Shred them before throwing away
+            </button>
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s2" data-answer="wrong">
+              Leave them by the bin for collection
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-s2"></p>
+        </div>
+
+        <!-- Scenario 3 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">👀 Someone is standing close behind you at a cash machine. What is this called and what should you do?</p>
+          <div class="space-y-2">
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s3" data-answer="correct">
+              Shoulder surfing - cover the keypad and ask them to step back
+            </button>
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s3" data-answer="wrong">
+              Identity theft - cancel my bank card immediately
+            </button>
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left" data-question="s3" data-answer="wrong">
+              Nothing - they're just waiting in the queue
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-s3"></p>
+        </div>
+
+        <!-- Scenario 4 -->
+        <div class="scenario-card p-4 rounded-lg">
+          <p class="mb-3 font-medium">🔐 Which of these is the STRONGEST password?</p>
+          <div class="space-y-2">
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left font-mono" data-question="s4" data-answer="wrong">
+              password123
+            </button>
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left font-mono" data-question="s4" data-answer="wrong">
+              MyBirthday2010
+            </button>
+            <button class="option-btn w-full px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 border-2 border-transparent text-left font-mono" data-question="s4" data-answer="correct">
+              7hG$kL2#pQw9
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-400 hidden" id="feedback-s4"></p>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="mt-10 text-center">
+        <button id="submitBtn"
+          class="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all flex items-center justify-center mx-auto">
+          <i data-feather="check-circle" class="w-5 h-5 mr-2"></i> Submit Answers
+        </button>
+        <p id="result" class="mt-4 text-lg font-semibold hidden"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Glowing Back Button -->
+  <a href="index.html"
+     class="group fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50">
+    <i data-feather="home" class="w-6 h-6 group-hover:text-yellow-300 transition-colors"></i>
+    <span class="sr-only">Back to Main Page</span>
+  </a>
+
+  <!-- JavaScript -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      feather.replace();
+
+      // Theme toggle
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const html = document.documentElement;
+
+      themeToggle.addEventListener('click', () => {
+        html.classList.toggle('dark');
+        themeIcon.setAttribute('data-feather', html.classList.contains('dark') ? 'sun' : 'moon');
+        feather.replace();
+      });
+
+      // Answers for true/false
+      const answers = {
+        q1: { correct: 'false', feedback: 'Correct! Average results are not personal data, so they don\'t fall under the Data Protection Act.' },
+        q2: { correct: 'false', feedback: 'Correct! All personal data falls under the Data Protection Act, regardless of where it\'s stored.' },
+        q3: { correct: 'false', feedback: 'Correct! You still need to provide personal information to complete purchases, which can be stolen.' },
+        q4: { correct: 'true', feedback: 'Correct! Companies can be fined if they don\'t adequately protect personal data (e.g., BA was fined £20 million).' },
+        q5: { correct: 'true', feedback: 'Correct! Organizations can share your data with your permission, usually through tick boxes or terms acceptance.' },
+        s1: { correct: 'correct', feedback: 'Correct! This is a phishing scam. Never share bank details via email.' },
+        s2: { correct: 'correct', feedback: 'Correct! Shredding documents prevents identity theft from stolen personal information.' },
+        s3: { correct: 'correct', feedback: 'Correct! Shoulder surfing is when someone tries to see your PIN or password.' },
+        s4: { correct: 'correct', feedback: 'Correct! Strong passwords use a mix of letters, numbers, and special characters.' }
+      };
+
+      // Handle option button clicks
+      const optionBtns = document.querySelectorAll('.option-btn');
+      const userAnswers = {};
+
+      optionBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const question = this.dataset.question;
+          const answer = this.dataset.answer;
+          
+          // Remove previous selections for this question
+          document.querySelectorAll(`[data-question="${question}"]`).forEach(b => {
+            b.classList.remove('option-correct', 'option-incorrect', 'bg-blue-600');
+          });
+
+          // Mark this button as selected
+          this.classList.add('bg-blue-600');
+          userAnswers[question] = answer;
+
+          // Show immediate feedback
+          const feedback = document.getElementById(`feedback-${question}`);
+          if (feedback) {
+            const isCorrect = answer === answers[question].correct;
+            this.classList.remove('bg-blue-600');
+            this.classList.add(isCorrect ? 'option-correct' : 'option-incorrect');
+            feedback.textContent = answers[question].feedback;
+            feedback.classList.remove('hidden');
+          }
+        });
+      });
+
+      // Social media info tags
+      const infoButtons = document.querySelectorAll('[data-info]');
+      const selectedInfo = new Set();
+      const correctInfo = ['name', 'birthday', 'age', 'location', 'grandma', 'friend', 'holiday', 'color'];
+
+      infoButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const info = this.dataset.info;
+          
+          if (selectedInfo.has(info)) {
+            selectedInfo.delete(info);
+            this.classList.remove('bg-blue-600');
+          } else {
+            selectedInfo.add(info);
+            this.classList.add('bg-blue-600');
+          }
+
+          updateInfoDisplay();
+        });
+      });
+
+      function updateInfoDisplay() {
+        const container = document.getElementById('selected-info');
+        const list = document.getElementById('info-list');
+        
+        if (selectedInfo.size > 0) {
+          container.classList.remove('hidden');
+          list.innerHTML = '';
+          
+          const infoLabels = {
+            name: 'Full name: Alice Matthews',
+            birthday: 'Birthday: April 15th',
+            age: 'Current age: 13 years old',
+            location: 'Home location: Trinity Road, Wandsworth, London',
+            grandma: 'Grandmother\'s name: Joan Morse',
+            friend: 'Friend\'s name: Nadia Simmons',
+            holiday: 'Holiday plans: Going to Tenerife next week',
+            color: 'Likely favorite color: Purple',
+            school: 'School name: Not revealed in posts'
+          };
+
+          selectedInfo.forEach(info => {
+            const div = document.createElement('div');
+            const isCorrect = correctInfo.includes(info);
+            div.className = isCorrect ? 'text-green-400' : 'text-red-400';
+            div.innerHTML = `${isCorrect ? '✓' : '✗'} ${infoLabels[info]}`;
+            list.appendChild(div);
+          });
+        } else {
+          container.classList.add('hidden');
+        }
+      }
+
+      // Submit button
+      document.getElementById('submitBtn').addEventListener('click', () => {
+        let correct = 0;
+        let total = Object.keys(answers).length;
+
+        for (const question in answers) {
+          if (userAnswers[question] === answers[question].correct) {
+            correct++;
+          }
+        }
+
+        // Check social media analysis
+        let infoScore = 0;
+        selectedInfo.forEach(info => {
+          if (correctInfo.includes(info)) infoScore++;
+        });
+
+        const resultEl = document.getElementById('result');
+        const percentage = Math.round((correct / total) * 100);
+        const infoPercentage = Math.round((infoScore / correctInfo.length) * 100);
+        
+        resultEl.innerHTML = `
+          <div class="p-4 bg-gray-800 rounded-lg">
+            <p class="text-2xl mb-2">Quiz Score: ${correct}/${total} (${percentage}%)</p>
+            <p class="text-lg">Social Media Analysis: ${infoScore}/${correctInfo.length} identified (${infoPercentage}%)</p>
+            <p class="mt-2 text-sm ${percentage >= 70 ? 'text-green-400' : 'text-yellow-400'}">
+              ${percentage >= 70 ? '🎉 Excellent work! You understand e-safety well.' : '📚 Keep learning! Review the research page for more information.'}
+            </p>
+          </div>
+        `;
+        resultEl.classList.remove('hidden');
+        
+        // Scroll to result
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  </script>
+</body>
+</html>

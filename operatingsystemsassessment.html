@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Operating Systems Assessment | Computer Science @ SVS</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <style>
+    /* SVS themed styling */
+    body {
+      background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+      color: #e6eef8;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    header { background: rgba(8,11,20,0.6); border-bottom: 1px solid rgba(100,116,139,0.12); backdrop-filter: blur(4px); }
+    .content-box { background: rgba(7,10,22,0.65); border: 1px solid #273449; border-radius: 12px; padding: 1.25rem; box-shadow: 0 8px 30px rgba(30,58,138,0.12); }
+    .layer-target { min-height: 64px; border: 2px dashed rgba(100,116,139,0.18); border-radius: 8px; padding: .5rem; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:6px; }
+    .draggable { cursor:grab; user-select:none; padding:0.35rem 0.75rem; background:#0b1220; border:1px solid #263241; border-radius:8px; color:#e6eef8; display:inline-block; }
+    .draggable:active { cursor:grabbing; opacity:0.9; }
+    .tile { padding:0.25rem .6rem; border-radius:6px; background:#142033; color:#dbeafe; border:1px solid #213246; }
+    .glow-correct { box-shadow: 0 0 18px rgba(34,197,94,0.45) !important; }
+    .glow-wrong { box-shadow: 0 0 18px rgba(248,113,113,0.45) !important; }
+    .hidden-print { display: block; }
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      header, footer, .floating, .hidden-print, .nav, #submitRow, .draggable, #pool { display: none !important; }
+      #resultsArea { display: block !important; }
+      .content-box { background: transparent !important; border: none !important; box-shadow: none !important; }
+    }
+    @media (max-width:640px){
+      .hero-title { font-size: 1.6rem; }
+      .grid-3 { grid-template-columns: repeat(1, minmax(0,1fr)); }
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <a href="index.html" class="inline-flex items-center text-yellow-400 hover:text-yellow-300">
+          <i data-feather="home" class="w-5 h-5 mr-2"></i> Main Page
+        </a>
+        <a href="home.html" class="inline-flex items-center text-blue-300 hover:text-blue-200">
+          <i data-feather="chevron-left" class="w-5 h-5 mr-2"></i> Back to Operating Systems
+        </a>
+      </div>
+      <h1 class="text-yellow-400 font-extrabold text-lg sm:text-xl">Operating Systems Assessment</h1>
+      <div class="text-right text-sm text-gray-300">
+        <span class="inline-flex items-center"><i data-feather="user" class="w-4 h-4 mr-2"></i>KS3 • Year 7</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="max-w-6xl mx-auto p-6 space-y-6">
+
+    <!-- Instructions -->
+    <section class="content-box">
+      <div class="flex items-start gap-4">
+        <i data-feather="info" class="w-7 h-7 text-blue-400 mt-1"></i>
+        <div>
+          <h2 class="text-xl font-semibold text-blue-300">Instructions</h2>
+          <p class="mt-2 text-sm text-gray-300">
+            Complete all sections. The diagram, multiple-choice and fill-in-the-blanks are auto-marked.
+            The short written answers will be shown for your teacher to review. When you finish click <strong>Submit Assessment</strong>.
+          </p>
+          <p class="mt-2 text-yellow-300 font-semibold">Important: After submitting, take a screenshot or print your results and submit it to your teacher as evidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAGRAM ACTIVITY -->
+    <section class="content-box" aria-labelledby="diagram-title">
+      <div class="flex items-center justify-between mb-4">
+        <h3 id="diagram-title" class="text-lg font-semibold text-blue-300">Activity — Layers of Computer Architecture (Drag & Drop)</h3>
+        <p class="text-sm text-gray-400">Drag tiles into the correct layer. Click a placed tile to remove it.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Pool -->
+        <div id="pool" class="p-3 bg-gray-900 rounded-md">
+          <p class="text-sm text-gray-300 mb-2 font-medium">Tiles to drag</p>
+          <div id="tiles" class="space-y-3">
+            <div class="draggable" draggable="true" data-key="User">User</div>
+            <div class="draggable" draggable="true" data-key="Application software">Application software</div>
+            <div class="draggable" draggable="true" data-key="Operating system">Operating system</div>
+            <div class="draggable" draggable="true" data-key="Kernel">Kernel</div>
+            <div class="draggable" draggable="true" data-key="Device driver">Device driver</div>
+            <div class="draggable" draggable="true" data-key="Firmware">Firmware</div>
+            <div class="draggable" draggable="true" data-key="Hardware">Hardware</div>
+          </div>
+        </div>
+
+        <!-- Diagram -->
+        <div class="lg:col-span-2 p-3 bg-gray-900 rounded-md">
+          <p class="text-sm text-gray-300 mb-3">Drop tiles below (OS layer accepts Kernel, Device driver, Firmware and Operating system)</p>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">Layer: <strong>User</strong></label>
+              <div class="layer-target" data-accept="User" id="target-user"></div>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">Layer: <strong>Application Software</strong></label>
+              <div class="layer-target" data-accept="Application software" id="target-app"></div>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">Layer: <strong>Operating System</strong></label>
+              <div class="layer-target" data-accept="Operating system|Kernel|Device driver|Firmware" id="target-os">
+                <small class="text-xs text-gray-500">(OS layer: Kernel, Device drivers, Firmware)</small>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">Layer: <strong>Hardware</strong></label>
+              <div class="layer-target" data-accept="Hardware" id="target-hw"></div>
+            </div>
+            <p class="mt-2 text-xs text-gray-400">Tip: Click a placed tile to remove it back to the pool.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MULTIPLE CHOICE (10 questions) -->
+    <section class="content-box" aria-labelledby="mcq-title">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="mcq-title" class="text-lg font-semibold text-blue-300">Section — Multiple Choice (10)</h3>
+        <p class="text-sm text-gray-400">Select one answer for each question.</p>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <!-- We'll include 10 MCQs here; answers are based on your KS3 content -->
+        <!-- Q1 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">1. Which of the following is a system software?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q1" type="radio" value="a"> A) Word processor</label>
+            <label><input name="q1" type="radio" value="b"> B) Web browser</label>
+            <label><input name="q1" type="radio" value="c"> C) Operating system</label>
+            <label><input name="q1" type="radio" value="d"> D) Photo editor</label>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">2. What does multitasking allow you to do?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q2" type="radio" value="a"> A) Run multiple applications at the same time</label>
+            <label><input name="q2" type="radio" value="b"> B) Run only one application faster</label>
+            <label><input name="q2" type="radio" value="c"> C) Prevent files from being saved</label>
+            <label><input name="q2" type="radio" value="d"> D) Replace the operating system</label>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">3. Which interface uses icons and windows?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q3" type="radio" value="a"> A) CLI (Command Line Interface)</label>
+            <label><input name="q3" type="radio" value="b"> B) GUI (Graphical User Interface)</label>
+            <label><input name="q3" type="radio" value="c"> C) BIOS</label>
+            <label><input name="q3" type="radio" value="d"> D) Kernel</label>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">4. What is the kernel?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q4" type="radio" value="a"> A) A type of hardware</label>
+            <label><input name="q4" type="radio" value="b"> B) The core part of the OS that controls system operations</label>
+            <label><input name="q4" type="radio" value="c"> C) A user application</label>
+            <label><input name="q4" type="radio" value="d"> D) A web server</label>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">5. What is a device driver used for?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q5" type="radio" value="a"> A) To protect against malware</label>
+            <label><input name="q5" type="radio" value="b"> B) To help the OS talk to hardware devices</label>
+            <label><input name="q5" type="radio" value="c"> C) To write code in Python</label>
+            <label><input name="q5" type="radio" value="d"> D) To format a hard drive</label>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">6. What is the difference between a cold boot and a warm boot?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q6" type="radio" value="a"> A) Cold boot = restart; Warm boot = switch on</label>
+            <label><input name="q6" type="radio" value="b"> B) Cold boot = switch on from powered off; Warm boot = restart the computer</label>
+            <label><input name="q6" type="radio" value="c"> C) Cold boot updates the OS; Warm boot clears memory</label>
+            <label><input name="q6" type="radio" value="d"> D) There is no difference</label>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">7. Which of these is open-source?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q7" type="radio" value="a"> A) Windows</label>
+            <label><input name="q7" type="radio" value="b"> B) macOS</label>
+            <label><input name="q7" type="radio" value="c"> C) Linux</label>
+            <label><input name="q7" type="radio" value="d"> D) iOS</label>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">8. Which part of the OS helps manage files and folders?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q8" type="radio" value="a"> A) File utilities / File management</label>
+            <label><input name="q8" type="radio" value="b"> B) Kernel only</label>
+            <label><input name="q8" type="radio" value="c"> C) Firmware</label>
+            <label><input name="q8" type="radio" value="d"> D) BIOS only</label>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">9. Which interface is faster and uses less memory (usually)?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q9" type="radio" value="a"> A) GUI</label>
+            <label><input name="q9" type="radio" value="b"> B) CLI</label>
+            <label><input name="q9" type="radio" value="c"> C) Web interface</label>
+            <label><input name="q9" type="radio" value="d"> D) Touch interface</label>
+          </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">10. What does API stand for and what is its purpose?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q10" type="radio" value="a"> A) Application Programming Interface — helps programs talk to hardware</label>
+            <label><input name="q10" type="radio" value="b"> B) Advanced Program Interface — replaces the OS</label>
+            <label><input name="q10" type="radio" value="c"> C) Automatic Program Installer — installs software</label>
+            <label><input name="q10" type="radio" value="d"> D) Application Program Interpreter — reads code</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILL IN THE BLANKS (5) -->
+    <section class="content-box" aria-labelledby="fill-title">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="fill-title" class="text-lg font-semibold text-blue-300">Section — Fill in the Missing Words (5)</h3>
+        <p class="text-sm text-gray-400">Type the missing word(s). Answers are not case-sensitive.</p>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block">1. The physical parts of a computer are called <input id="b1" class="ml-2 px-2 py-1 rounded bg-gray-900 text-white" placeholder="_____" /></label>
+        </div>
+
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block">2. The <input id="b2" class="ml-2 px-2 py-1 rounded bg-gray-900 text-white" placeholder="_____" /> is the control centre of the OS.</label>
+        </div>
+
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block">3. <input id="b3" class="ml-2 px-2 py-1 rounded bg-gray-900 text-white" placeholder="_____" /> allows multiple programs to run at the same time.</label>
+        </div>
+
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block">4. A <input id="b4" class="ml-2 px-2 py-1 rounded bg-gray-900 text-white" placeholder="_____" /> helps the OS communicate with a printer or camera.</label>
+        </div>
+
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block">5. <input id="b5" class="ml-2 px-2 py-1 rounded bg-gray-900 text-white" placeholder="system software and application software" /> are the two main types of software.</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHORT WRITTEN (teacher-reviewed) -->
+    <section class="content-box" aria-labelledby="short-title">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="short-title" class="text-lg font-semibold text-blue-300">Section — Short Written Answers</h3>
+        <p class="text-sm text-gray-400">Two short answers (teacher-reviewed).</p>
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block text-sm text-gray-200 mb-1">1. Explain the difference between a cold boot and a warm boot (1–2 sentences):</label>
+          <textarea id="w1" rows="3" class="w-full rounded bg-gray-900 px-3 py-2 text-white" placeholder="Type your answer..."></textarea>
+        </div>
+
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block text-sm text-gray-200 mb-1">2. In simple words, what is an API?</label>
+          <textarea id="w2" rows="3" class="w-full rounded bg-gray-900 px-3 py-2 text-white" placeholder="Type your answer..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBMIT / RESULTS -->
+    <section class="content-box" id="submitRow">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <button id="submitBtn" class="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-bold transition inline-flex items-center">
+            <i data-feather="check-circle" class="w-5 h-5 mr-2"></i> Submit Assessment
+          </button>
+
+          <button id="clearBtn" class="ml-3 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-semibold transition inline-flex items-center">
+            <i data-feather="trash-2" class="w-4 h-4 mr-2"></i> Clear Saved Results
+          </button>
+
+          <button id="printBtn" class="ml-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition inline-flex items-center">
+            <i data-feather="printer" class="w-4 h-4 mr-2"></i> Print Results
+          </button>
+        </div>
+
+        <div class="text-sm text-gray-300">
+          <span class="font-medium">Auto-marked:</span> Multiple choice, Diagram, Fill-ins.
+        </div>
+      </div>
+
+      <!-- Results area -->
+      <div id="resultsArea" class="mt-6 hidden" aria-live="polite">
+        <h4 class="text-lg font-semibold text-blue-300 mb-2">Results Overview</h4>
+
+        <div id="summary" class="p-3 bg-gray-900 rounded-md border border-gray-700 text-sm space-y-2"></div>
+
+        <div class="mt-4 grid sm:grid-cols-2 gap-4">
+          <div class="p-3 bg-gray-900 rounded-md border border-gray-700">
+            <h5 class="font-semibold text-yellow-300">Questions Breakdown</h5>
+            <ul id="breakdown" class="mt-2 text-sm space-y-1"></ul>
+          </div>
+
+          <div class="p-3 bg-gray-900 rounded-md border border-gray-700">
+            <h5 class="font-semibold text-yellow-300">Diagram Feedback</h5>
+            <div id="diagramFB" class="mt-2 text-sm"></div>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-blue-900/20 rounded-md border border-blue-800 text-sm">
+          <strong class="text-yellow-300">Next step:</strong> Take a screenshot of this page or click <strong>Print Results</strong> and submit it to your teacher as evidence.
+        </div>
+
+        <div class="mt-4 p-3 bg-gray-900 rounded-md border border-gray-700">
+          <h5 class="font-semibold text-yellow-300">Your written answers (for teacher review)</h5>
+          <div id="writtenAnswers" class="mt-2 text-sm"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating Back button -->
+  <a href="index.html" class="group fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50" title="Back to Main Page">
+    <i data-feather="home" class="w-6 h-6 group-hover:text-yellow-300 transition-colors"></i>
+    <span class="sr-only">Back to Main Page</span>
+  </a>
+
+  <footer class="mt-8 text-center text-sm text-gray-400 pb-8">© 2025 Computer Science @ SVS</footer>
+
+  <!-- Feather icons -->
+  <script>feather.replace()</script>
+
+  <!-- Assessment logic -->
+  <script>
+    // utility
+    const norm = s => (s||'').toString().trim().toLowerCase();
+
+    // MCQ answers (10)
+    const mcqAnswers = {
+      q1: 'c',
+      q2: 'a',
+      q3: 'b',
+      q4: 'b',
+      q5: 'b',
+      q6: 'b',
+      q7: 'c',
+      q8: 'a',
+      q9: 'b',
+      q10: 'a'
+    };
+
+    // Fill-in answers: arrays of acceptable variants
+    const fillAnswers = {
+      b1: ['hardware','the hardware','physical parts','physical parts of a computer'],
+      b2: ['kernel','the kernel','os kernel'],
+      b3: ['multitasking','multi-tasking','multi tasking'],
+      b4: ['device driver','driver','device drivers'],
+      b5: ['system software and application software','system & application software','system software and application software','system and application software','system & application']
+    };
+
+    function checkFill(id, val) {
+      const v = norm(val);
+      if(!fillAnswers[id]) return false;
+      return fillAnswers[id].some(ans => norm(ans) === v);
+    }
+
+    // drag & drop
+    const draggables = document.querySelectorAll('.draggable');
+    const targets = document.querySelectorAll('.layer-target');
+    const pool = document.getElementById('tiles');
+
+    draggables.forEach(d => {
+      d.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', d.dataset.key);
+        setTimeout(() => d.style.visibility = 'hidden', 0);
+      });
+      d.addEventListener('dragend', e => {
+        d.style.visibility = 'visible';
+      });
+    });
+
+    targets.forEach(t => {
+      t.addEventListener('dragover', e => e.preventDefault());
+      t.addEventListener('drop', e => {
+        e.preventDefault();
+        const key = e.dataTransfer.getData('text/plain');
+        if(!key) return;
+        // remove existing same-key tiles in any target
+        document.querySelectorAll('.layer-target [data-key="'+key+'"]').forEach(el => el.remove());
+        // create tile
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.textContent = key;
+        tile.setAttribute('data-key', key);
+        tile.title = 'Click to remove';
+        tile.addEventListener('click', () => tile.remove());
+        t.appendChild(tile);
+      });
+    });
+
+    // load saved results (localStorage)
+    function loadSaved() {
+      const raw = localStorage.getItem('osAssessmentResults');
+      if(!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        // show results using displayResults
+        displayResults(data, {fromLoad:true});
+      } catch(e) { console.error('Failed to parse saved results', e); }
+    }
+
+    // show temporary toast
+    function toast(msg, ms=4000){
+      const el = document.createElement('div');
+      el.className = 'fixed left-1/2 -translate-x-1/2 bottom-6 z-60 bg-blue-700 text-white px-4 py-3 rounded shadow-lg';
+      el.style.boxShadow = '0 10px 30px rgba(2,6,23,0.6)';
+      el.textContent = msg;
+      document.body.appendChild(el);
+      setTimeout(()=> el.remove(), ms);
+    }
+
+    // build results and show
+    function displayResults(resultObj, opts={}) {
+      // show results area
+      document.getElementById('resultsArea').classList.remove('hidden');
+      // summary
+      const summary = document.getElementById('summary');
+      summary.innerHTML = `
+        <div><strong>Auto-marked score:</strong> ${resultObj.autoCorrect}/${resultObj.autoTotal}</div>
+        <div><strong>Breakdown:</strong> MCQ ${resultObj.mcqCorrect}/${resultObj.mcqTotal}, Fill ${resultObj.fillCorrect}/${resultObj.fillTotal}, Diagram ${resultObj.diagramScore}/${resultObj.diagramTotal}</div>
+        <div><strong>Saved on:</strong> ${resultObj.date || new Date().toLocaleString()}</div>
+      `;
+
+      // breakdown list
+      const bd = document.getElementById('breakdown');
+      bd.innerHTML = '';
+      resultObj.mcqDetails.forEach((d, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>Q${i+1} (MCQ):</strong> ${d.ok ? '<span class="text-green-400">Correct</span>' : '<span class="text-red-400">Incorrect</span>'} — your answer: ${d.chosen || '<em>none</em>'}`;
+        bd.appendChild(li);
+      });
+      resultObj.fillDetails.forEach((d, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>Blank ${i+1}:</strong> ${d.ok ? '<span class="text-green-400">Correct</span>' : '<span class="text-red-400">Incorrect</span>'} — "${d.answer||''}"`;
+        bd.appendChild(li);
+      });
+
+      // diagram feedback
+      const df = document.getElementById('diagramFB');
+      df.innerHTML = resultObj.diagramFeedback.map(s => `<div class="${s.ok ? 'text-green-300' : 'text-red-300'}">• ${s.msg}</div>`).join('');
+
+      // written answers
+      const wa = document.getElementById('writtenAnswers');
+      wa.innerHTML = `<div><strong>1.</strong> ${resultObj.w1 || '<em>none</em>'}</div><div class="mt-2"><strong>2.</strong> ${resultObj.w2 || '<em>none</em>'}</div>`;
+
+      // show toast about screenshot if not from load
+      if(!opts.fromLoad) {
+        toast('Assessment submitted. Take a screenshot or print the results and send to your teacher.', 6000);
+      }
+    }
+
+    // main submit logic
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      // MCQs
+      let mcqCorrect = 0, mcqTotal = Object.keys(mcqAnswers).length;
+      const mcqDetails = [];
+      for(const q in mcqAnswers){
+        const checked = document.querySelector(`input[name="${q}"]:checked`);
+        const chosen = checked ? checked.value : null;
+        const ok = chosen === mcqAnswers[q];
+        if(ok) mcqCorrect++;
+        mcqDetails.push({q, chosen, ok});
+      }
+
+      // fills
+      let fillCorrect = 0, fillTotal = 5;
+      const fillDetails = [];
+      for(let i=1;i<=5;i++){
+        const id = 'b'+i;
+        const val = document.getElementById(id).value || '';
+        const ok = checkFill(id, val);
+        if(ok) fillCorrect++;
+        fillDetails.push({id, answer: val, ok});
+      }
+
+      // diagram checks
+      let diagramScore = 0, diagramTotal = 4;
+      const diagramFeedback = [];
+
+      function hasTile(targetId, key){
+        const t = document.getElementById(targetId);
+        if(!t) return false;
+        return Array.from(t.querySelectorAll('[data-key]')).some(el => el.getAttribute('data-key') === key);
+      }
+      // User
+      if(hasTile('target-user','User')) { diagramScore++; diagramFeedback.push({ok:true,msg:'User tile placed correctly.'}); } else { diagramFeedback.push({ok:false,msg:'User tile missing in User layer.'}); }
+      // Application software
+      if(hasTile('target-app','Application software')) { diagramScore++; diagramFeedback.push({ok:true,msg:'Application software placed correctly.'}); } else { diagramFeedback.push({ok:false,msg:'Application software missing in Application layer.'}); }
+      // OS: require Operating system or Kernel present
+      const osNode = document.getElementById('target-os');
+      const osHas = Array.from(osNode.querySelectorAll('[data-key]')).map(n=>n.getAttribute('data-key'));
+      if(osHas.includes('Operating system') || osHas.includes('Kernel')) { diagramScore++; diagramFeedback.push({ok:true,msg:'OS layer contains OS/Kernel (correct).'}); } else { diagramFeedback.push({ok:false,msg:'OS layer missing Operating system or Kernel.'}); }
+      // Hardware
+      if(hasTile('target-hw','Hardware')) { diagramScore++; diagramFeedback.push({ok:true,msg:'Hardware tile placed correctly.'}); } else { diagramFeedback.push({ok:false,msg:'Hardware tile missing in Hardware layer.'}); }
+
+      // totals
+      const autoCorrect = mcqCorrect + fillCorrect + diagramScore;
+      const autoTotal = mcqTotal + fillTotal + diagramTotal;
+
+      // written answers
+      const w1 = document.getElementById('w1').value.trim();
+      const w2 = document.getElementById('w2').value.trim();
+
+      // build results object
+      const results = {
+        date: new Date().toLocaleString(),
+        mcqTotal, mcqCorrect, mcqDetails,
+        fillTotal, fillCorrect, fillDetails,
+        diagramTotal, diagramScore, diagramFeedback,
+        autoTotal, autoCorrect,
+        w1, w2
+      };
+
+      // store in localStorage
+      try {
+        localStorage.setItem('osAssessmentResults', JSON.stringify(results));
+      } catch(e) {
+        console.warn('Could not save to localStorage', e);
+      }
+
+      // prepare object for display (convert diagramFeedback to simple msgs)
+      const displayObj = {
+        date: results.date,
+        mcqTotal: results.mcqTotal, mcqCorrect: results.mcqCorrect, mcqDetails: results.mcqDetails.map(d=>({chosen:d.chosen,ok:d.ok})),
+        fillTotal: results.fillTotal, fillCorrect: results.fillCorrect, fillDetails: results.fillDetails,
+        diagramTotal: results.diagramTotal, diagramScore: results.diagramScore, diagramFeedback: results.diagramFeedback,
+        autoTotal: results.autoTotal, autoCorrect: results.autoCorrect,
+        w1: results.w1, w2: results.w2
+      };
+
+      displayResults(displayObj);
+    });
+
+    // print results
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    // clear saved results
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      localStorage.removeItem('osAssessmentResults');
+      toast('Saved results cleared.', 2500);
+      // hide results area
+      document.getElementById('resultsArea').classList.add('hidden');
+    });
+
+    // on load, check localStorage and show saved results
+    window.addEventListener('DOMContentLoaded', loadSaved);
+  </script>
+</body>
+</html>

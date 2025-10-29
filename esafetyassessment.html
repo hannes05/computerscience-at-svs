@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E-Safety Assessment | Computer Science @ SVS</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <style>
+    /* SVS themed styling */
+    body {
+      background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+      color: #e6eef8;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    header { background: rgba(8,11,20,0.6); border-bottom: 1px solid rgba(100,116,139,0.12); backdrop-filter: blur(4px); }
+    .content-box { background: rgba(7,10,22,0.65); border: 1px solid #273449; border-radius: 12px; padding: 1.25rem; box-shadow: 0 8px 30px rgba(30,58,138,0.12); }
+    .hidden-print { display: block; }
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      header, footer, .floating, .hidden-print, .nav, #submitRow { display: none !important; }
+      #resultsArea { display: block !important; }
+      .content-box { background: transparent !important; border: none !important; box-shadow: none !important; }
+    }
+    @media (max-width:640px){
+      .hero-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <a href="index.html" class="inline-flex items-center text-yellow-400 hover:text-yellow-300">
+          <i data-feather="home" class="w-5 h-5 mr-2"></i> Main Page
+        </a>
+        <a href="home-esafety.html" class="inline-flex items-center text-blue-300 hover:text-blue-200">
+          <i data-feather="chevron-left" class="w-5 h-5 mr-2"></i> Back to E-Safety
+        </a>
+      </div>
+      <h1 class="text-yellow-400 font-extrabold text-lg sm:text-xl">E-Safety Assessment</h1>
+      <div class="text-right text-sm text-gray-300">
+        <span class="inline-flex items-center"><i data-feather="user" class="w-4 h-4 mr-2"></i>KS3 • Year 7</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="max-w-6xl mx-auto p-6 space-y-6">
+
+    <!-- Instructions -->
+    <section class="content-box">
+      <div class="flex items-start gap-4">
+        <i data-feather="info" class="w-7 h-7 text-blue-400 mt-1"></i>
+        <div>
+          <h2 class="text-xl font-semibold text-blue-300">Instructions</h2>
+          <p class="mt-2 text-sm text-gray-300">
+            Complete all sections. Multiple-choice and matching questions are auto-marked.
+            The written answers will be shown for your teacher to review. When you finish click <strong>Submit Assessment</strong>.
+          </p>
+          <p class="mt-2 text-yellow-300 font-semibold">Important: After submitting, take a screenshot or print your results and submit it to your teacher as evidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MULTIPLE CHOICE (10 questions) -->
+    <section class="content-box" aria-labelledby="mcq-title">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="mcq-title" class="text-lg font-semibold text-blue-300">Section A – Multiple Choice (10)</h3>
+        <p class="text-sm text-gray-400">Select one answer for each question.</p>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <!-- Q1 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">1. What is personal data?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q1" type="radio" value="a"> A) Data about computer hardware</label>
+            <label><input name="q1" type="radio" value="b"> B) Information linked to a specific person</label>
+            <label><input name="q1" type="radio" value="c"> C) General statistics about a population</label>
+            <label><input name="q1" type="radio" value="d"> D) Software programs and applications</label>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">2. What does ICO stand for?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q2" type="radio" value="a"> A) Information Commissioner's Office</label>
+            <label><input name="q2" type="radio" value="b"> B) Internet Control Organisation</label>
+            <label><input name="q2" type="radio" value="c"> C) International Cyber Office</label>
+            <label><input name="q2" type="radio" value="d"> D) Identity Crime Organisation</label>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">3. What is identity theft?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q3" type="radio" value="a"> A) Stealing someone's computer</label>
+            <label><input name="q3" type="radio" value="b"> B) Using personal information to pretend to be someone else</label>
+            <label><input name="q3" type="radio" value="c"> C) Hacking into social media accounts</label>
+            <label><input name="q3" type="radio" value="d"> D) Creating fake websites</label>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">4. What is shoulder surfing?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q4" type="radio" value="a"> A) A type of water sport</label>
+            <label><input name="q4" type="radio" value="b"> B) Looking over someone's shoulder to see passwords or PINs</label>
+            <label><input name="q4" type="radio" value="c"> C) Hacking into WiFi networks</label>
+            <label><input name="q4" type="radio" value="d"> D) Sending phishing emails</label>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">5. How much was British Airways fined for their 2020 data breach?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q5" type="radio" value="a"> A) £2 million</label>
+            <label><input name="q5" type="radio" value="b"> B) £10 million</label>
+            <label><input name="q5" type="radio" value="c"> C) £20 million</label>
+            <label><input name="q5" type="radio" value="d"> D) £50 million</label>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">6. Which of these is NOT a responsibility of organisations under the Data Protection Act?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q6" type="radio" value="a"> A) Tell you what data is collected</label>
+            <label><input name="q6" type="radio" value="b"> B) Keep data secure</label>
+            <label><input name="q6" type="radio" value="c"> C) Share your data with anyone who asks</label>
+            <label><input name="q6" type="radio" value="d"> D) Only collect data that is needed</label>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">7. What should you do with old documents containing personal information?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q7" type="radio" value="a"> A) Put them in the recycling bin</label>
+            <label><input name="q7" type="radio" value="b"> B) Shred them before disposal</label>
+            <label><input name="q7" type="radio" value="c"> C) Leave them by the bin</label>
+            <label><input name="q7" type="radio" value="d"> D) Give them to neighbours</label>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">8. Which of these is an example of personal data?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q8" type="radio" value="a"> A) The name of a local beach</label>
+            <label><input name="q8" type="radio" value="b"> B) Your mobile phone number</label>
+            <label><input name="q8" type="radio" value="c"> C) The number of students in a school</label>
+            <label><input name="q8" type="radio" value="d"> D) The postcode of a library</label>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">9. What does GDPR stand for?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q9" type="radio" value="a"> A) General Data Protection Regulation</label>
+            <label><input name="q9" type="radio" value="b"> B) Government Data Privacy Rules</label>
+            <label><input name="q9" type="radio" value="c"> C) Global Data Protection Rights</label>
+            <label><input name="q9" type="radio" value="d"> D) General Digital Privacy Regulation</label>
+          </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <p class="font-medium">10. Which organisation holds personal data about you?</p>
+          <div class="mt-2 space-y-2">
+            <label><input name="q10" type="radio" value="a"> A) Your school</label>
+            <label><input name="q10" type="radio" value="b"> B) Your email provider</label>
+            <label><input name="q10" type="radio" value="c"> C) Social media companies</label>
+            <label><input name="q10" type="radio" value="d"> D) All of the above</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCHING EXERCISE -->
+    <section class="content-box" aria-labelledby="match-title">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="match-title" class="text-lg font-semibold text-blue-300">Section B – Matching (5)</h3>
+        <p class="text-sm text-gray-400">Match each term with its correct definition.</p>
+      </div>
+
+      <div class="space-y-3 text-sm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-3 bg-gray-800 rounded-md">
+            <p class="font-medium mb-2">1. Personal Data</p>
+            <select name="m1" class="w-full px-3 py-2 bg-gray-900 rounded">
+              <option value="">-- Select --</option>
+              <option value="a">Information linked to a specific person</option>
+              <option value="b">Looking over someone's shoulder to see passwords</option>
+              <option value="c">Using someone's information to pretend to be them</option>
+              <option value="d">UK law protecting personal data</option>
+              <option value="e">Organisation enforcing data protection in the UK</option>
+            </select>
+          </div>
+
+          <div class="p-3 bg-gray-800 rounded-md">
+            <p class="font-medium mb-2">2. Identity Theft</p>
+            <select name="m2" class="w-full px-3 py-2 bg-gray-900 rounded">
+              <option value="">-- Select --</option>
+              <option value="a">Information linked to a specific person</option>
+              <option value="b">Looking over someone's shoulder to see passwords</option>
+              <option value="c">Using someone's information to pretend to be them</option>
+              <option value="d">UK law protecting personal data</option>
+              <option value="e">Organisation enforcing data protection in the UK</option>
+            </select>
+          </div>
+
+          <div class="p-3 bg-gray-800 rounded-md">
+            <p class="font-medium mb-2">3. Shoulder Surfing</p>
+            <select name="m3" class="w-full px-3 py-2 bg-gray-900 rounded">
+              <option value="">-- Select --</option>
+              <option value="a">Information linked to a specific person</option>
+              <option value="b">Looking over someone's shoulder to see passwords</option>
+              <option value="c">Using someone's information to pretend to be them</option>
+              <option value="d">UK law protecting personal data</option>
+              <option value="e">Organisation enforcing data protection in the UK</option>
+            </select>
+          </div>
+
+          <div class="p-3 bg-gray-800 rounded-md">
+            <p class="font-medium mb-2">4. Data Protection Act (2018)</p>
+            <select name="m4" class="w-full px-3 py-2 bg-gray-900 rounded">
+              <option value="">-- Select --</option>
+              <option value="a">Information linked to a specific person</option>
+              <option value="b">Looking over someone's shoulder to see passwords</option>
+              <option value="c">Using someone's information to pretend to be them</option>
+              <option value="d">UK law protecting personal data</option>
+              <option value="e">Organisation enforcing data protection in the UK</option>
+            </select>
+          </div>
+
+          <div class="p-3 bg-gray-800 rounded-md">
+            <p class="font-medium mb-2">5. ICO</p>
+            <select name="m5" class="w-full px-3 py-2 bg-gray-900 rounded">
+              <option value="">-- Select --</option>
+              <option value="a">Information linked to a specific person</option>
+              <option value="b">Looking over someone's shoulder to see passwords</option>
+              <option value="c">Using someone's information to pretend to be them</option>
+              <option value="d">UK law protecting personal data</option>
+              <option value="e">Organisation enforcing data protection in the UK</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHORT WRITTEN (teacher-reviewed) -->
+    <section class="content-box" aria-labelledby="short-title">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="short-title" class="text-lg font-semibold text-blue-300">Section C – Written Answers</h3>
+        <p class="text-sm text-gray-400">Answer in full sentences (teacher-reviewed).</p>
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block text-sm text-gray-200 mb-1">1. Explain three ways you can protect yourself from identity theft (3-4 sentences):</label>
+          <textarea id="w1" rows="4" class="w-full rounded bg-gray-900 px-3 py-2 text-white" placeholder="Type your answer..."></textarea>
+        </div>
+
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block text-sm text-gray-200 mb-1">2. Why is it dangerous to share too much personal information on social media? Give at least two reasons (2-3 sentences):</label>
+          <textarea id="w2" rows="4" class="w-full rounded bg-gray-900 px-3 py-2 text-white" placeholder="Type your answer..."></textarea>
+        </div>
+
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block text-sm text-gray-200 mb-1">3. A company experiences a data breach where customer credit card details are stolen. What are the potential consequences for: (a) the customers, and (b) the company? (3-4 sentences):</label>
+          <textarea id="w3" rows="4" class="w-full rounded bg-gray-900 px-3 py-2 text-white" placeholder="Type your answer..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENARIO ANALYSIS -->
+    <section class="content-box" aria-labelledby="scenario-title">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="scenario-title" class="text-lg font-semibold text-blue-300">Section D – Scenario Analysis</h3>
+        <p class="text-sm text-gray-400">Read the scenario and answer the questions.</p>
+      </div>
+
+      <div class="p-4 bg-blue-900 bg-opacity-20 rounded-md border border-blue-700 mb-4">
+        <p class="text-sm"><strong>Scenario:</strong> Sarah receives an email that appears to be from her bank. The email says there has been suspicious activity on her account and asks her to click a link to verify her details. The link takes her to a website that looks like her bank's website and asks for her username, password, and security answers.</p>
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block text-sm text-gray-200 mb-1">1. What type of attack is this? Explain what it is (2 sentences):</label>
+          <textarea id="w4" rows="3" class="w-full rounded bg-gray-900 px-3 py-2 text-white" placeholder="Type your answer..."></textarea>
+        </div>
+
+        <div class="p-3 bg-gray-800 rounded-md border border-gray-700">
+          <label class="block text-sm text-gray-200 mb-1">2. What should Sarah do? List at least three actions (3-4 sentences):</label>
+          <textarea id="w5" rows="3" class="w-full rounded bg-gray-900 px-3 py-2 text-white" placeholder="Type your answer..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBMIT / RESULTS -->
+    <section class="content-box" id="submitRow">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <button id="submitBtn" class="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-bold transition inline-flex items-center">
+            <i data-feather="check-circle" class="w-5 h-5 mr-2"></i> Submit Assessment
+          </button>
+
+          <button id="clearBtn" class="ml-3 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-semibold transition inline-flex items-center">
+            <i data-feather="trash-2" class="w-4 h-4 mr-2"></i> Clear Saved Results
+          </button>
+
+          <button id="printBtn" class="ml-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition inline-flex items-center">
+            <i data-feather="printer" class="w-4 h-4 mr-2"></i> Print Results
+          </button>
+        </div>
+
+        <div class="text-sm text-gray-300">
+          <span class="font-medium">Auto-marked:</span> Multiple choice and Matching.
+        </div>
+      </div>
+
+      <!-- Results area -->
+      <div id="resultsArea" class="mt-6 hidden" aria-live="polite">
+        <h4 class="text-lg font-semibold text-blue-300 mb-2">Results Overview</h4>
+
+        <div id="summary" class="p-3 bg-gray-900 rounded-md border border-gray-700 text-sm space-y-2"></div>
+
+        <div class="mt-4 grid sm:grid-cols-2 gap-4">
+          <div class="p-3 bg-gray-900 rounded-md border border-gray-700">
+            <h5 class="font-semibold text-yellow-300">Multiple Choice Breakdown</h5>
+            <ul id="breakdown" class="mt-2 text-sm space-y-1"></ul>
+          </div>
+
+          <div class="p-3 bg-gray-900 rounded-md border border-gray-700">
+            <h5 class="font-semibold text-yellow-300">Matching Breakdown</h5>
+            <ul id="matchBreakdown" class="mt-2 text-sm space-y-1"></ul>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-blue-900/20 rounded-md border border-blue-800 text-sm">
+          <strong class="text-yellow-300">Next step:</strong> Take a screenshot of this page or click <strong>Print Results</strong> and submit it to your teacher as evidence.
+        </div>
+
+        <div class="mt-4 p-3 bg-gray-900 rounded-md border border-gray-700">
+          <h5 class="font-semibold text-yellow-300">Your written answers (for teacher review)</h5>
+          <div id="writtenAnswers" class="mt-2 text-sm space-y-3"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating Back button -->
+  <a href="index.html" class="group fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50" title="Back to Main Page">
+    <i data-feather="home" class="w-6 h-6 group-hover:text-yellow-300 transition-colors"></i>
+    <span class="sr-only">Back to Main Page</span>
+  </a>
+
+  <footer class="mt-8 text-center text-sm text-gray-400 pb-8">© 2025 Computer Science @ SVS</footer>
+
+  <!-- Feather icons -->
+  <script>feather.replace()</script>
+
+  <!-- Assessment logic -->
+  <script>
+    // utility
+    const norm = s => (s||'').toString().trim().toLowerCase();
+
+    // MCQ answers (10)
+    const mcqAnswers = {
+      q1: 'b',
+      q2: 'a',
+      q3: 'b',
+      q4: 'b',
+      q5: 'c',
+      q6: 'c',
+      q7: 'b',
+      q8: 'b',
+      q9: 'a',
+      q10: 'd'
+    };
+
+    // Matching answers
+    const matchAnswers = {
+      m1: 'a', // Personal Data
+      m2: 'c', // Identity Theft
+      m3: 'b', // Shoulder Surfing
+      m4: 'd', // Data Protection Act
+      m5: 'e'  // ICO
+    };
+
+    // load saved results (localStorage)
+    function loadSaved() {
+      const raw = localStorage.getItem('esafetyAssessmentResults');
+      if(!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        displayResults(data, {fromLoad:true});
+      } catch(e) { console.error('Failed to parse saved results', e); }
+    }
+
+    // show temporary toast
+    function toast(msg, ms=4000){
+      const el = document.createElement('div');
+      el.className = 'fixed left-1/2 -translate-x-1/2 bottom-6 z-60 bg-blue-700 text-white px-4 py-3 rounded shadow-lg';
+      el.style.boxShadow = '0 10px 30px rgba(2,6,23,0.6)';
+      el.textContent = msg;
+      document.body.appendChild(el);
+      setTimeout(()=> el.remove(), ms);
+    }
+
+    // build results and show
+    function displayResults(resultObj, opts={}) {
+      // show results area
+      document.getElementById('resultsArea').classList.remove('hidden');
+      
+      // summary
+      const summary = document.getElementById('summary');
+      summary.innerHTML = `
+        <div><strong>Auto-marked score:</strong> ${resultObj.autoCorrect}/${resultObj.autoTotal}</div>
+        <div><strong>Breakdown:</strong> MCQ ${resultObj.mcqCorrect}/${resultObj.mcqTotal}, Matching ${resultObj.matchCorrect}/${resultObj.matchTotal}</div>
+        <div><strong>Saved on:</strong> ${resultObj.date || new Date().toLocaleString()}</div>
+      `;
+
+      // MCQ breakdown list
+      const bd = document.getElementById('breakdown');
+      bd.innerHTML = '';
+      resultObj.mcqDetails.forEach((d, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>Q${i+1}:</strong> ${d.ok ? '<span class="text-green-400">Correct</span>' : '<span class="text-red-400">Incorrect</span>'} – your answer: ${d.chosen || '<em>none</em>'}`;
+        bd.appendChild(li);
+      });
+
+      // Matching breakdown
+      const mb = document.getElementById('matchBreakdown');
+      mb.innerHTML = '';
+      resultObj.matchDetails.forEach((d, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>Match ${i+1}:</strong> ${d.ok ? '<span class="text-green-400">Correct</span>' : '<span class="text-red-400">Incorrect</span>'}`;
+        mb.appendChild(li);
+      });
+
+      // written answers
+      const wa = document.getElementById('writtenAnswers');
+      wa.innerHTML = `
+        <div class="p-2 bg-gray-800 rounded"><strong>Q1 (Protection methods):</strong><br>${resultObj.w1 || '<em>none</em>'}</div>
+        <div class="p-2 bg-gray-800 rounded"><strong>Q2 (Social media dangers):</strong><br>${resultObj.w2 || '<em>none</em>'}</div>
+        <div class="p-2 bg-gray-800 rounded"><strong>Q3 (Data breach consequences):</strong><br>${resultObj.w3 || '<em>none</em>'}</div>
+        <div class="p-2 bg-gray-800 rounded"><strong>Q4 (Type of attack):</strong><br>${resultObj.w4 || '<em>none</em>'}</div>
+        <div class="p-2 bg-gray-800 rounded"><strong>Q5 (What Sarah should do):</strong><br>${resultObj.w5 || '<em>none</em>'}</div>
+      `;
+
+      // show toast about screenshot if not from load
+      if(!opts.fromLoad) {
+        toast('Assessment submitted. Take a screenshot or print the results and send to your teacher.', 6000);
+      }
+    }
+
+    // main submit logic
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      // MCQs
+      let mcqCorrect = 0, mcqTotal = Object.keys(mcqAnswers).length;
+      const mcqDetails = [];
+      for(const q in mcqAnswers){
+        const checked = document.querySelector(`input[name="${q}"]:checked`);
+        const chosen = checked ? checked.value : null;
+        const ok = chosen === mcqAnswers[q];
+        if(ok) mcqCorrect++;
+        mcqDetails.push({q, chosen, ok});
+      }
+
+      // Matching
+      let matchCorrect = 0, matchTotal = Object.keys(matchAnswers).length;
+      const matchDetails = [];
+      for(const m in matchAnswers){
+        const select = document.querySelector(`select[name="${m}"]`);
+        const chosen = select ? select.value : null;
+        const ok = chosen === matchAnswers[m];
+        if(ok) matchCorrect++;
+        matchDetails.push({m, chosen, ok});
+      }
+
+      // totals
+      const autoCorrect = mcqCorrect + matchCorrect;
+      const autoTotal = mcqTotal + matchTotal;
+
+      // written answers
+      const w1 = document.getElementById('w1').value.trim();
+      const w2 = document.getElementById('w2').value.trim();
+      const w3 = document.getElementById('w3').value.trim();
+      const w4 = document.getElementById('w4').value.trim();
+      const w5 = document.getElementById('w5').value.trim();
+
+      // build results object
+      const results = {
+        date: new Date().toLocaleString(),
+        mcqTotal, mcqCorrect, mcqDetails: mcqDetails.map(d=>({chosen:d.chosen,ok:d.ok})),
+        matchTotal, matchCorrect, matchDetails: matchDetails.map(d=>({chosen:d.chosen,ok:d.ok})),
+        autoTotal, autoCorrect,
+        w1, w2, w3, w4, w5
+      };
+
+      // store in localStorage
+      try {
+        localStorage.setItem('esafetyAssessmentResults', JSON.stringify(results));
+      } catch(e) {
+        console.warn('Could not save to localStorage', e);
+      }
+
+      displayResults(results);
+    });
+
+    // print results
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    // clear saved results
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      localStorage.removeItem('esafetyAssessmentResults');
+      toast('Saved results cleared.', 2500);
+      document.getElementById('resultsArea').classList.add('hidden');
+    });
+
+    // on load, check localStorage and show saved results
+    window.addEventListener('DOMContentLoaded', loadSaved);
+  </script>
+</body>
+</html>
