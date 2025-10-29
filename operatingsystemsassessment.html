@@ -37,15 +37,6 @@
       .hero-title { font-size: 1.6rem; }
       .grid-3 { grid-template-columns: repeat(1, minmax(0,1fr)); }
     }
-
-/* Tap selection highlight */
-.draggable-word.selected {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-  background-color: rgba(59,130,246,0.2);
-}
-
-    
   </style>
 </head>
 <body class="min-h-screen antialiased">
@@ -409,50 +400,27 @@
       return fillAnswers[id].some(ans => norm(ans) === v);
     }
 
-// --- Section 1: Tap-to-Select + Place Logic (Desktop + Mobile Friendly) ---
-let selectedWord = null;
+    // drag & drop
+    const draggables = document.querySelectorAll('.draggable');
+    const targets = document.querySelectorAll('.layer-target');
+    const pool = document.getElementById('tiles');
 
-// When a draggable word is tapped or clicked
-document.querySelectorAll('.draggable-word').forEach(word => {
-  word.addEventListener('click', () => {
-    // Toggle selection state
-    if (selectedWord === word) {
-      word.classList.remove('selected');
-      selectedWord = null;
-      return;
-    }
+    draggables.forEach(d => {
+      d.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', d.dataset.key);
+        setTimeout(() => d.style.visibility = 'hidden', 0);
+      });
+      d.addEventListener('dragend', e => {
+        d.style.visibility = 'visible';
+      });
+    });
 
-    // Remove previous selection
-    document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
-    selectedWord = word;
-    word.classList.add('selected');
-  });
-});
-
-// When a blank is tapped/clicked
-document.querySelectorAll('.blank-drop').forEach(blank => {
-  blank.addEventListener('click', () => {
-    if (!selectedWord) return;
-
-    // Allow overwriting an existing answer
-    if (blank.dataset.currentWord) {
-      const previousWord = Array.from(document.querySelectorAll('.draggable-word'))
-        .find(w => w.textContent.trim() === blank.dataset.currentWord);
-      if (previousWord) previousWord.classList.remove('hidden');
-    }
-
-    blank.textContent = selectedWord.textContent;
-    blank.dataset.currentWord = selectedWord.textContent;
-    blank.classList.add('bg-blue-900', 'text-white');
-    blank.classList.remove('bg-gray-700');
-
-    selectedWord.classList.remove('selected');
-    selectedWord.classList.add('hidden'); // hide placed word
-    selectedWord = null;
-  });
-});
-
-    
+    targets.forEach(t => {
+      t.addEventListener('dragover', e => e.preventDefault());
+      t.addEventListener('drop', e => {
+        e.preventDefault();
+        const key = e.dataTransfer.getData('text/plain');
+        if(!key) return;
         // remove existing same-key tiles in any target
         document.querySelectorAll('.layer-target [data-key="'+key+'"]').forEach(el => el.remove());
         // create tile
@@ -625,4 +593,3 @@ document.querySelectorAll('.blank-drop').forEach(blank => {
   </script>
 </body>
 </html>
-

@@ -11,13 +11,6 @@
     .layer-target{min-height:56px;border:2px dashed rgba(100,116,139,0.18);border-radius:8px;padding:.5rem;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px}
     .tile{padding:.25rem .6rem;border-radius:6px;background:#142033;color:#dbeafe;border:1px solid #213246}
     @media print{header,footer,.hidden-print{display:none!important}.content-box{background:transparent!important;border:none!important;box-shadow:none!important}}
-  /* Tap selection highlight */
-.draggable-word.selected {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-  background-color: rgba(59,130,246,0.2);
-}
-
   </style>
 </head>
 <body class="min-h-screen antialiased">
@@ -320,49 +313,23 @@
     // -- Utility
     const norm = s => (s||'').toString().trim().toLowerCase();
 
-    // --- Section 1: Tap-to-Select + Place Logic (Desktop + Mobile Friendly) ---
-let selectedWord = null;
-
-// When a draggable word is tapped or clicked
-document.querySelectorAll('.draggable-word').forEach(word => {
-  word.addEventListener('click', () => {
-    // Toggle selection state
-    if (selectedWord === word) {
-      word.classList.remove('selected');
-      selectedWord = null;
-      return;
+    // -- Matching and diagram drag/drop shared logic
+    function makeDraggables(selector) {
+      document.querySelectorAll(selector).forEach(d => {
+        d.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', d.dataset.key);
+          setTimeout(()=> d.style.visibility='hidden', 0);
+        });
+        d.addEventListener('dragend', e => d.style.visibility='visible');
+      });
     }
-
-    // Remove previous selection
-    document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
-    selectedWord = word;
-    word.classList.add('selected');
-  });
-});
-
-// When a blank is tapped/clicked
-document.querySelectorAll('.blank-drop').forEach(blank => {
-  blank.addEventListener('click', () => {
-    if (!selectedWord) return;
-
-    // Allow overwriting an existing answer
-    if (blank.dataset.currentWord) {
-      const previousWord = Array.from(document.querySelectorAll('.draggable-word'))
-        .find(w => w.textContent.trim() === blank.dataset.currentWord);
-      if (previousWord) previousWord.classList.remove('hidden');
-    }
-
-    blank.textContent = selectedWord.textContent;
-    blank.dataset.currentWord = selectedWord.textContent;
-    blank.classList.add('bg-blue-900', 'text-white');
-    blank.classList.remove('bg-gray-700');
-
-    selectedWord.classList.remove('selected');
-    selectedWord.classList.add('hidden'); // hide placed word
-    selectedWord = null;
-  });
-});
-
+    function makeTargets(selector) {
+      document.querySelectorAll(selector).forEach(t => {
+        t.addEventListener('dragover', e => e.preventDefault());
+        t.addEventListener('drop', e => {
+          e.preventDefault();
+          const key = e.dataTransfer.getData('text/plain');
+          if(!key) return;
           // remove duplicate tiles
           document.querySelectorAll('[data-key="'+key+'"]').forEach(el => {
             // keep pool original if it is in pool
@@ -599,4 +566,3 @@ document.querySelectorAll('.blank-drop').forEach(blank => {
   </script>
 </body>
 </html>
-
