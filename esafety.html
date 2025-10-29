@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>E-Safety | Computer Science @ SVS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body{background:radial-gradient(circle at top,#0f172a 0%,#020617 100%);color:#e6eef8}
+    .content-box{background:rgba(7,10,22,0.65);border:1px solid #273449;border-radius:12px;padding:1.25rem}
+    .hero-img {object-fit:cover;opacity:.28}
+    .dropdown-menu{display:none}
+    .dropdown:hover .dropdown-menu{display:block}
+  </style>
+</head>
+<body class="min-h-screen antialiased">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center text-yellow-400"><i data-feather="cpu" class="w-6 h-6 mr-2 text-blue-400"></i>Computer Science @ SVS</a>
+      <nav class="flex items-center gap-6">
+        <a href="esafety.html" class="text-blue-300">E-Safety</a>
+        <div class="relative dropdown">
+          <button class="text-blue-300 flex items-center">Topics <i data-feather="chevron-down" class="w-4 h-4 ml-1"></i></button>
+          <div class="dropdown-menu absolute right-0 mt-2 w-56 bg-gray-900 p-2 rounded border border-gray-700">
+            <a href="socialmedia.html" class="block px-2 py-1 text-sm text-blue-300 hover:bg-gray-800 rounded">Social Media</a>
+            <a href="home-esafety.html" class="block px-2 py-1 text-sm text-blue-300 hover:bg-gray-800 rounded">Online Privacy</a>
+            <a href="#" class="block px-2 py-1 text-sm text-blue-300 hover:bg-gray-800 rounded">Cyberbullying</a>
+            <a href="#" class="block px-2 py-1 text-sm text-blue-300 hover:bg-gray-800 rounded">Digital Footprint</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-6xl mx-auto p-6">
+    <div class="relative content-box overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=9f9cc7d3c6f7c7f2aa1b7ce5f5e7b8f3" alt="e-safety" class="absolute inset-0 w-full h-full hero-img">
+      <div class="relative z-10 p-6">
+        <h1 class="text-3xl sm:text-4xl font-bold text-yellow-400">E-Safety Hub</h1>
+        <p class="text-blue-300 mt-2 max-w-2xl">A safe place to learn about staying safe online. Choose a topic below to begin.</p>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <a href="socialmedia.html" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold inline-flex items-center"><i data-feather="users" class="w-4 h-4 mr-2"></i> Social Media</a>
+          <a href="home-esafety.html" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold inline-flex items-center"><i data-feather="shield" class="w-4 h-4 mr-2"></i> Online Privacy</a>
+          <a href="#" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-semibold inline-flex items-center"><i data-feather="alert-triangle" class="w-4 h-4 mr-2"></i> Cyberbullying</a>
+          <a href="#" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-white font-semibold inline-flex items-center"><i data-feather="globe" class="w-4 h-4 mr-2"></i> Digital Footprint</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <main class="max-w-6xl mx-auto p-6 space-y-6">
+    <section class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="content-box">
+        <h3 class="text-xl font-semibold text-blue-300">Social Media</h3>
+        <p class="text-gray-300 mt-2">Learn how to use social platforms safely and kindly.</p>
+        <a href="socialmedia.html" class="inline-block mt-3 text-blue-400 underline">Open Social Media page →</a>
+      </div>
+
+      <div class="content-box">
+        <h3 class="text-xl font-semibold text-blue-300">Online Privacy</h3>
+        <p class="text-gray-300 mt-2">Control what you share and who can see it.</p>
+        <a href="home-esafety.html" class="inline-block mt-3 text-blue-400 underline">Open Privacy tips →</a>
+      </div>
+
+      <div class="content-box">
+        <h3 class="text-xl font-semibold text-blue-300">Digital Footprint</h3>
+        <p class="text-gray-300 mt-2">Think ahead — your online posts leave a trace.</p>
+        <a href="#" class="inline-block mt-3 text-blue-400 underline">Explore Digital Footprint →</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer & floating -->
+  <footer class="max-w-6xl mx-auto text-center text-sm text-gray-400 p-6">© 2025 Computer Science @ SVS</footer>
+  <a href="index.html" class="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-lg z-50"><i data-feather="home" class="w-5 h-5"></i></a>
+
+  <script>feather.replace()</script>
+</body>
+</html>
