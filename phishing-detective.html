@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phishing Detective | E-Safety Game</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+    }
+    #game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 2rem auto;
+    }
+    canvas {
+      border-radius: 1rem;
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  
+  <!-- HEADER -->
+  <header class="bg-gray-900 bg-opacity-90 backdrop-blur border-b border-gray-700 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <a href="index.html" class="text-yellow-400 font-bold text-xl flex items-center">
+        <i data-feather="shield" class="w-6 h-6 mr-2 text-blue-400"></i>
+        Phishing Detective
+      </a>
+      <a href="home-esafety.html" class="text-blue-300 hover:text-blue-100 transition">
+        <i data-feather="arrow-left" class="w-5 h-5 inline mr-1"></i> Back to E-Safety
+      </a>
+    </div>
+  </header>
+
+  <!-- GAME INFO -->
+  <div class="max-w-6xl mx-auto p-6">
+    <div class="bg-gray-900 bg-opacity-80 rounded-lg p-6 mb-4 border border-gray-700">
+      <h1 class="text-3xl font-bold text-yellow-400 mb-2">🕵️ Phishing Detective</h1>
+      <p class="text-gray-300 mb-4">Can you spot the phishing emails? Test your cyber security skills!</p>
+      
+      <div class="grid sm:grid-cols-3 gap-4 mb-4">
+        <div class="bg-gray-800 rounded p-3 text-center">
+          <p class="text-sm text-gray-400">Current Score</p>
+          <p class="text-2xl font-bold text-green-400" id="current-score">0</p>
+        </div>
+        <div class="bg-gray-800 rounded p-3 text-center">
+          <p class="text-sm text-gray-400">High Score</p>
+          <p class="text-2xl font-bold text-blue-400" id="high-score">0</p>
+        </div>
+        <div class="bg-gray-800 rounded p-3 text-center">
+          <p class="text-sm text-gray-400">Difficulty</p>
+          <p class="text-2xl font-bold text-yellow-400" id="difficulty-display">Easy</p>
+        </div>
+      </div>
+
+      <div class="flex gap-2 flex-wrap">
+        <button id="btn-easy" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded font-semibold transition">
+          Easy
+        </button>
+        <button id="btn-medium" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded font-semibold transition">
+          Medium
+        </button>
+        <button id="btn-hard" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-semibold transition">
+          Hard
+        </button>
+        <button id="btn-restart" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold transition">
+          <i data-feather="refresh-cw" class="w-4 h-4 inline"></i> Restart
+        </button>
+      </div>
+    </div>
+
+    <!-- GAME CONTAINER -->
+    <div id="game-container"></div>
+
+    <!-- HOW TO PLAY -->
+    <div class="bg-gray-900 bg-opacity-80 rounded-lg p-6 mt-4 border border-gray-700">
+      <h2 class="text-xl font-bold text-blue-400 mb-3">📖 How to Play</h2>
+      <ul class="space-y-2 text-gray-300">
+        <li>✅ <strong>Green Button (SAFE):</strong> Click if the email looks legitimate</li>
+        <li>❌ <strong>Red Button (PHISHING):</strong> Click if the email is a scam</li>
+        <li>🎯 <strong>Score Points:</strong> +10 for correct answers, -5 for mistakes</li>
+        <li>⭐ <strong>Difficulty:</strong> Harder levels have trickier emails and less time!</li>
+      </ul>
+      
+      <div class="mt-4 p-3 bg-yellow-900 bg-opacity-30 border border-yellow-700 rounded">
+        <p class="text-sm text-yellow-300"><strong>🔍 Phishing Signs to Look For:</strong></p>
+        <ul class="text-sm text-gray-300 mt-2 space-y-1">
+          <li>• Spelling and grammar mistakes</li>
+          <li>• Urgent language ("Act now!", "Verify immediately!")</li>
+          <li>• Suspicious sender email addresses</li>
+          <li>• Requests for personal information</li>
+          <li>• Strange links or attachments</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Back Button -->
+  <a href="index.html" class="fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50">
+    <i data-feather="home" class="w-6 h-6"></i>
+  </a>
+
+  <script>
+    feather.replace();
+
+    // Game configuration
+    const config = {
+      type: Phaser.AUTO,
+      width: 800,
+      height: 600,
+      parent: 'game-container',
+      backgroundColor: '#1e293b',
+      scene: {
+        preload: preload,
+        create: create,
+        update: update
+      }
+    };
+
+    const game = new Phaser.Game(config);
+
+    // Game variables
+    let score = 0;
+    let highScore = 0;
+    let difficulty = 'easy';
+    let currentEmail = null;
+    let emailText = null;
+    let safeBtn = null;
+    let phishingBtn = null;
+    let scoreText = null;
+    let feedbackText = null;
+    let timerText = null;
+    let timerBar = null;
+    let timeLeft = 0;
+    let maxTime = 30;
+    let gameActive = false;
+
+    // Email database
+    const emails = {
+      easy: [
+        { text: "From: bank@secure-bank.com\nSubject: Account Update\n\nDear Customer, please verify your account by clicking here and entering your password.", phishing: true, clue: "Banks never ask for passwords via email" },
+        { text: "From: school@svs.edu\nSubject: Homework Reminder\n\nReminder: Your computing homework is due tomorrow. Check the school portal for details.", phishing: false, clue: "Legitimate school communication" },
+        { text: "From: noreply@amazn.com\nSubject: Your order\n\nYour package is delayed. Click here to track.", phishing: true, clue: "Note the misspelling: 'amazn' not 'amazon'" },
+        { text: "From: tech-support@microsoft-help.xyz\nSubject: URGENT: Virus Detected!\n\nYour computer has a virus! Call now: 0800-FAKE-NUM", phishing: true, clue: "Microsoft doesn't send urgent virus warnings" },
+        { text: "From: friend@email.com\nSubject: Party this weekend\n\nHey! Are you coming to my party on Saturday?", phishing: false, clue: "Normal message from a friend" },
+      ],
+      medium: [
+        { text: "From: paypal@service-verification.com\nSubject: Account Limitation\n\nWe have limited your account. Verify within 24 hours to restore access.", phishing: true, clue: "Check the domain carefully" },
+        { text: "From: notifications@github.com\nSubject: Pull request approved\n\nYour pull request #234 has been approved and merged.", phishing: false, clue: "Legitimate GitHub notification" },
+        { text: "From: support@apple-security.net\nSubject: iCloud Storage Full\n\nUpgrade your storage now. Limited time offer!", phishing: true, clue: "Apple doesn't use '.net' for official emails" },
+        { text: "From: admin@svs.edu\nSubject: School Trip Information\n\nAttached is the permission form for next month's museum trip.", phishing: false, clue: "Normal school communication" },
+        { text: "From: no-reply@netflix.com\nSubject: Payment Failed\n\nYour payment method failed. Update it here: http://netflx-billing.tk", phishing: true, clue: "Suspicious link domain '.tk'" },
+      ],
+      hard: [
+        { text: "From: security@gmail.com\nSubject: Unusual Activity\n\nWe detected unusual activity. Review: https://accounts.google.com/verify", phishing: false, clue: "Real Google security alert (though always check URL carefully!)" },
+        { text: "From: no-reply@amazon.co.uk\nSubject: Order Confirmation\n\nOrder #123-456. Total: £299.99\nIf you didn't order this, click here.", phishing: true, clue: "Creates panic to make you click without thinking" },
+        { text: "From: billing@microsoft.com\nSubject: Office 365 Renewal\n\nYour subscription expires tomorrow. Renew now: http://office-renewal.info", phishing: true, clue: "Domain 'office-renewal.info' is suspicious" },
+        { text: "From: team@slack.com\nSubject: New message in #general\n\nYou have unread messages in your workspace.", phishing: false, clue: "Standard Slack notification" },
+        { text: "From: ceo@company.com\nSubject: Urgent - Wire Transfer Needed\n\nI'm in a meeting. Please wire £5,000 to this account immediately.", phishing: true, clue: "CEO fraud - verify through other means!" },
+      ]
+    };
+
+    function preload() {
+      // No assets needed - using text-based game
+    }
+
+    function create() {
+      // Load high score
+      highScore = parseInt(localStorage.getItem('phishingHighScore')) || 0;
+      document.getElementById('high-score').textContent = highScore;
+
+      // Title
+      this.add.text(400, 40, '🕵️ Phishing Detective', {
+        fontSize: '32px',
+        fill: '#fbbf24',
+        fontFamily: 'Arial',
+        fontStyle: 'bold'
+      }).setOrigin(0.5);
+
+      // Email display area
+      const emailBox = this.add.rectangle(400, 250, 700, 280, 0x1e293b);
+      emailBox.setStrokeStyle(2, 0x3b82f6);
+
+      emailText = this.add.text(400, 250, 'Click START to begin!', {
+        fontSize: '18px',
+        fill: '#e2e8f0',
+        fontFamily: 'Courier New',
+        align: 'left',
+        wordWrap: { width: 650 }
+      }).setOrigin(0.5);
+
+      // Score
+      scoreText = this.add.text(400, 450, 'Score: 0', {
+        fontSize: '24px',
+        fill: '#10b981',
+        fontFamily: 'Arial',
+        fontStyle: 'bold'
+      }).setOrigin(0.5);
+
+      // Timer bar background
+      this.add.rectangle(400, 490, 600, 20, 0x374151);
+      timerBar = this.add.rectangle(100, 490, 600, 20, 0x3b82f6);
+      timerBar.setOrigin(0, 0.5);
+
+      // Timer text
+      timerText = this.add.text(400, 515, 'Time: 30s', {
+        fontSize: '18px',
+        fill: '#93c5fd',
+        fontFamily: 'Arial'
+      }).setOrigin(0.5);
+
+      // Buttons
+      safeBtn = this.add.rectangle(250, 550, 200, 50, 0x10b981);
+      safeBtn.setInteractive();
+      safeBtn.on('pointerdown', () => checkAnswer(false));
+      safeBtn.on('pointerover', () => safeBtn.setFillStyle(0x059669));
+      safeBtn.on('pointerout', () => safeBtn.setFillStyle(0x10b981));
+
+      this.add.text(250, 550, '✅ SAFE', {
+        fontSize: '20px',
+        fill: '#ffffff',
+        fontFamily: 'Arial',
+        fontStyle: 'bold'
+      }).setOrigin(0.5);
+
+      phishingBtn = this.add.rectangle(550, 550, 200, 50, 0xef4444);
+      phishingBtn.setInteractive();
+      phishingBtn.on('pointerdown', () => checkAnswer(true));
+      phishingBtn.on('pointerover', () => phishingBtn.setFillStyle(0xdc2626));
+      phishingBtn.on('pointerout', () => phishingBtn.setFillStyle(0xef4444));
+
+      this.add.text(550, 550, '❌ PHISHING', {
+        fontSize: '20px',
+        fill: '#ffffff',
+        fontFamily: 'Arial',
+        fontStyle: 'bold'
+      }).setOrigin(0.5);
+
+      // Feedback text
+      feedbackText = this.add.text(400, 420, '', {
+        fontSize: '20px',
+        fill: '#fbbf24',
+        fontFamily: 'Arial',
+        fontStyle: 'bold'
+      }).setOrigin(0.5);
+
+      // Start first email
+      loadNewEmail();
+      gameActive = true;
+    }
+
+    function update() {
+      if (gameActive && timeLeft > 0) {
+        timeLeft -= 1/60; // Decrease by frame
+        timerText.setText(`Time: ${Math.ceil(timeLeft)}s`);
+        
+        // Update timer bar
+        const barWidth = (timeLeft / maxTime) * 600;
+        timerBar.setSize(barWidth, 20);
+        
+        // Change color based on time
+        if (timeLeft < 10) {
+          timerBar.setFillStyle(0xef4444); // Red
+        } else if (timeLeft < 20) {
+          timerBar.setFillStyle(0xfbbf24); // Yellow
+        }
+
+        // Time's up
+        if (timeLeft <= 0) {
+          checkAnswer(null); // Wrong answer
+        }
+      }
+    }
+
+    function loadNewEmail() {
+      const emailList = emails[difficulty];
+      currentEmail = emailList[Math.floor(Math.random() * emailList.length)];
+      emailText.setText(currentEmail.text);
+      feedbackText.setText('');
+      
+      // Reset timer
+      timeLeft = maxTime;
+      timerBar.setFillStyle(0x3b82f6);
+    }
+
+    function checkAnswer(userSaysPhishing) {
+      if (!gameActive) return;
+
+      gameActive = false;
+      let correct = false;
+
+      if (userSaysPhishing === null) {
+        // Time ran out
+        feedbackText.setText("⏰ Time's up! That was " + (currentEmail.phishing ? "PHISHING" : "SAFE"));
+        feedbackText.setColor('#ef4444');
+        score = Math.max(0, score - 5);
+      } else if (userSaysPhishing === currentEmail.phishing) {
+        // Correct!
+        correct = true;
+        score += 10;
+        feedbackText.setText('✅ Correct! +10 points');
+        feedbackText.setColor('#10b981');
+      } else {
+        // Wrong
+        feedbackText.setText('❌ Wrong! ' + currentEmail.clue);
+        feedbackText.setColor('#ef4444');
+        score = Math.max(0, score - 5);
+      }
+
+      scoreText.setText(`Score: ${score}`);
+      document.getElementById('current-score').textContent = score;
+
+      // Update high score
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('phishingHighScore', highScore);
+        document.getElementById('high-score').textContent = highScore;
+      }
+
+      // Load next email after delay
+      setTimeout(() => {
+        gameActive = true;
+        loadNewEmail();
+      }, 2500);
+    }
+
+    function setDifficulty(level) {
+      difficulty = level;
+      document.getElementById('difficulty-display').textContent = 
+        level.charAt(0).toUpperCase() + level.slice(1);
+      
+      // Adjust time based on difficulty
+      if (level === 'easy') maxTime = 30;
+      else if (level === 'medium') maxTime = 20;
+      else if (level === 'hard') maxTime = 15;
+      
+      restartGame();
+    }
+
+    function restartGame() {
+      score = 0;
+      scoreText.setText('Score: 0');
+      document.getElementById('current-score').textContent = 0;
+      gameActive = true;
+      loadNewEmail();
+    }
+
+    // Button handlers
+    document.getElementById('btn-easy').addEventListener('click', () => setDifficulty('easy'));
+    document.getElementById('btn-medium').addEventListener('click', () => setDifficulty('medium'));
+    document.getElementById('btn-hard').addEventListener('click', () => setDifficulty('hard'));
+    document.getElementById('btn-restart').addEventListener('click', () => restartGame());
+  </script>
+
+</body>
+</html>
