@@ -1,160 +1,688 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Social Media Assessment | Computer Science @ SVS</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Social Media Awareness Assessment</title>
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Feather icons -->
   <script src="https://unpkg.com/feather-icons"></script>
+
   <style>
-    body {
-      background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
-      color: #e6eef8;
-      font-family: Inter, system-ui;
+    /* ---------- Palette & base ---------- */
+    :root{
+      --primary: #5B8DEF;
+      --primary-100: #C9E8FF;
+      --bg-start: #F8FBFF;
+      --bg-end: #E8F1FF;
+      --card: #FFFFFF;
+      --text: #2E2E2E;
+      --muted: #6A6A6A;
+      --success: #38C172;
+      --warn: #FFA500;
+      --danger: #E3342F;
+      --glass: rgba(91,141,239,0.06);
+      --shadow: 0 8px 30px rgba(46,46,46,0.08);
+      --radius: 12px;
+      --fab-size: 56px;
     }
-    .content-box {
-      background: rgba(7,10,22,0.65);
-      border: 1px solid #273449;
-      border-radius: 12px;
-      padding: 1.25rem;
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Poppins", Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(180deg,var(--bg-start) 0%, var(--bg-end) 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.55;
+      padding-bottom:110px;
     }
-    .draggable {
-      cursor: grab;
-      padding: .35rem .75rem;
-      border-radius: 8px;
-      background: #0b1220;
-      border: 1px solid #263241;
-      display: inline-block;
-      user-select: none;
-      transition: all 0.2s ease;
+
+    /* ---------- layout ---------- */
+    .wrap{max-width:1050px;margin:24px auto;padding:20px}
+    header.site{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin-bottom:18px;
     }
-    .draggable.selected {
-      background: #1e293b;
-      border-color: #60a5fa;
-      box-shadow: 0 0 8px rgba(59,130,246,0.6);
+    header .title{
+      display:flex;flex-direction:column;align-items:flex-start;
     }
-    .layer-target {
-      min-height: 56px;
-      border: 2px dashed rgba(100,116,139,0.18);
-      border-radius: 8px;
-      padding: .5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      transition: all 0.2s ease;
+    header h1{font-size: clamp(18px, 2.6vw, 28px); margin:0; color:var(--primary); font-weight:700}
+    header p{margin:6px 0 0;color:var(--muted);font-size:0.95rem}
+
+    /* ---------- card ---------- */
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      border:1px solid rgba(14,47,99,0.06);
+      margin-bottom:14px;
     }
-    .layer-target.hovered {
-      border-color: #60a5fa;
-      background: rgba(59,130,246,0.05);
+    .muted { color: var(--muted); font-size:0.95rem; }
+
+    /* ---------- instructions ---------- */
+    .instructions { display:flex; gap:12px; align-items:flex-start; }
+    .badge { background:var(--primary-100); color:var(--primary); font-weight:600; padding:6px 10px; border-radius:999px; font-size:0.85rem; }
+
+    /* ---------- accordion (sections) ---------- */
+    .accordion{margin-top:10px}
+    .acc-item{border-radius:10px; overflow:hidden; border:1px solid rgba(14,47,99,0.04); margin-bottom:10px;}
+    .acc-head{
+      display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:linear-gradient(90deg,#fff,#f7fbff);
+      cursor:pointer; gap:12px;
     }
-    .tile {
-      padding: .25rem .6rem;
-      border-radius: 6px;
-      background: #142033;
-      color: #dbeafe;
-      border: 1px solid #213246;
+    .acc-head h3{margin:0;font-size:1rem;color:var(--text)}
+    .acc-head .meta { color:var(--muted); font-size:0.9rem }
+    .acc-body{padding:14px;border-top:1px solid rgba(14,47,99,0.04); display:none; animation:fadeIn .22s ease}
+    .acc-body.show{display:block}
+
+    @keyframes fadeIn { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+
+    /* ---------- questions ---------- */
+    .question{background:#f6fbff;padding:12px;border-radius:8px;border:1px solid rgba(14,47,99,0.03); margin-bottom:10px;}
+    .q-title{font-weight:600;margin-bottom:8px;color:var(--text)}
+    .choices label{display:block; margin-bottom:6px; cursor:pointer; color:var(--text)}
+    input[type="radio"]{margin-right:8px}
+
+    input[type="text"], textarea, input[type="search"]{
+      width:100%; padding:10px;border-radius:8px;border:1px solid rgba(14,47,99,0.06); background: #ffffff; color:var(--text);
     }
-    @media print {
-      header, footer, .hidden-print { display:none!important }
-      .content-box { background:transparent!important; border:none!important; box-shadow:none!important }
+
+    textarea{min-height:72px; resize:vertical}
+
+    /* ---------- matching / draggable ---------- */
+    .pool{display:flex;flex-wrap:wrap; gap:8px}
+    .draggable{
+      cursor:grab;padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#F0F6FF,#ECF7FF);
+      border:1px solid rgba(91,141,239,0.15); color:var(--primary); font-weight:600; user-select:none;
+      box-shadow: 0 6px 14px rgba(91,141,239,0.06);
+    }
+    .layer-target{
+      min-height:54px;border-radius:8px;border:2px dashed rgba(14,47,99,0.06);
+      display:flex;align-items:center;justify-content:center;padding:8px; background:linear-gradient(180deg,#fff,#fbfdff);
+    }
+    .tile{padding:6px 10px;border-radius:8px;background:var(--glass);border:1px solid rgba(91,141,239,0.10); color:var(--primary); font-weight:600; margin:4px; cursor:pointer}
+    .tile:active{transform:scale(0.98)}
+
+    /* ---------- buttons (kept labels/roles but styled) ---------- */
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;
+      font-weight:700; font-size:0.95rem; box-shadow: 0 6px 20px rgba(91,141,239,0.08);
+      transition: transform .12s ease, box-shadow .12s ease;
+      background:linear-gradient(180deg,var(--primary), #3f74d8); color:white;
+    }
+    .btn:focus{outline:3px solid rgba(91,141,239,0.18); outline-offset:2px}
+    .btn:hover{ box-shadow: 0 10px 30px rgba(91,141,239,0.16); transform: translateY(-2px) }
+    .btn:active{ transform: translateY(0); box-shadow: 0 6px 16px rgba(91,141,239,0.09) }
+    .btn.ghost{ background:transparent; color:var(--primary); border:1px solid rgba(91,141,239,0.12); font-weight:600 }
+    .btn.red{ background: linear-gradient(180deg,#ff6b6b,#ef4b4b) }
+    .btn.blue{ background: linear-gradient(180deg,#3b82f6,#2563eb) }
+    .btn.green{ background: linear-gradient(180deg,#34d399,#10b981) }
+
+    /* small helpers */
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1;min-width:160px}
+    .hint{color:var(--muted);font-size:0.9rem}
+    .divider{height:1px;background:linear-gradient(90deg, transparent, rgba(14,47,99,0.04), transparent); margin:12px 0}
+
+    /* results modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(24,29,63,0.45); display:none; align-items:center;justify-content:center; z-index:1200; padding:20px}
+    .modal-backdrop.show{display:flex}
+    .modal{
+      background:var(--card); width:100%; max-width:720px;border-radius:14px;padding:18px; box-shadow: 0 20px 60px rgba(20,30,60,0.18);
+      border: 1px solid rgba(91,141,239,0.10);
+      transform-origin:center center;
+    }
+    .modal .score-box{display:flex;align-items:center;gap:14px}
+    .score-pill{font-weight:800;font-size:1.4rem;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--primary),#3f74d8);color:white;box-shadow:0 8px 30px rgba(91,141,239,0.18)}
+    .score-message{font-weight:700;color:var(--text)}
+    .section-breakdown{margin-top:12px;border-radius:8px;padding:10px;background:#f7fbff;border:1px solid rgba(91,141,239,0.04)}
+    .section-line{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:8px 6px;border-radius:8px}
+    .section-line .label{font-weight:600}
+    .section-line .small{color:var(--muted);font-size:0.92rem}
+    .feedback-good{color:var(--success)}
+    .feedback-mid{color:var(--warn)}
+    .feedback-bad{color:var(--danger)}
+
+    /* FAB */
+    .fab{
+      position:fixed; right:18px; bottom:18px; z-index:1300; width:var(--fab-size); height:var(--fab-size);
+      border-radius:999px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,var(--primary),#3f74d8);
+      color:white; box-shadow: 0 12px 30px rgba(91,141,239,0.24); text-decoration:none; font-size:20px;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .fab:hover{ transform: translateY(-6px); box-shadow: 0 20px 40px rgba(91,141,239,0.28) }
+    .fab:active{ transform: translateY(-2px) }
+
+    /* responsive */
+    @media (max-width:720px){
+      .wrap{padding:12px}
+      .acc-head{padding:10px}
+      .acc-body{padding:12px}
+      .card{padding:12px}
+      .modal{padding:14px}
+      header{flex-direction:column;align-items:flex-start;gap:8px}
     }
   </style>
 </head>
-<body class="min-h-screen antialiased">
+<body>
+  <div class="wrap">
 
-  <!-- Header -->
-  <header class="sticky top-0 z-40 bg-transparent">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <a href="index.html" class="text-yellow-400 inline-flex items-center"><i data-feather="home" class="w-5 h-5 mr-2"></i>Main</a>
-        <a href="socialmedia.html" class="text-blue-300 inline-flex items-center"><i data-feather="chevron-left" class="w-5 h-5 mr-2"></i>Back</a>
+    <!-- header -->
+    <header class="site">
+      <div class="title">
+        <h1>Social Media Awareness Assessment</h1>
+        <p>Test your understanding of online safety, responsible posting, and digital citizenship.</p>
       </div>
-      <h1 class="text-yellow-400 font-extrabold text-lg">Social Media Assessment</h1>
-      <div class="text-sm text-gray-300">KS3 • Year 7</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="badge">KS3 • Year 7</div>
+        <button class="btn ghost" id="helpToggle" title="Toggle instructions"><i data-feather="info"></i> Instructions</button>
+      </div>
+    </header>
+
+    <!-- instructions card (collapsed by default) -->
+    <section class="card" id="instructionsCard" aria-hidden="true" style="display:none">
+      <div class="instructions">
+        <div style="min-width:54px; height:54px; border-radius:12px; background:linear-gradient(180deg,var(--primary-100),#eef7ff); display:flex; align-items:center; justify-content:center">
+          <i data-feather="book" style="color:var(--primary)"></i>
+        </div>
+        <div style="flex:1">
+          <h3 style="margin:0 0 8px 0;color:var(--primary)">Before you begin</h3>
+          <div class="muted">Read each section carefully. Matching, multiple-choice, fill-ins and diagram are auto-marked. Short written answers will be visible to your teacher. Click Submit to see your results in a popup.</div>
+          <div style="margin-top:10px;" class="row">
+            <input id="studentName" placeholder="Your full name (optional)" style="flex:1;min-width:160px;padding:10px;border-radius:10px;border:1px solid rgba(14,47,99,0.06)" />
+            <input id="studentClass" placeholder="Class (e.g. 7B)" style="width:120px;padding:10px;border-radius:10px;border:1px solid rgba(14,47,99,0.06)" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- accordion wrapper -->
+    <div class="accordion">
+
+      <!-- Section A: Awareness (MCQ) -->
+      <div class="acc-item" id="sec-a">
+        <div class="acc-head" tabindex="0" role="button" aria-expanded="false" data-target="a-body">
+          <div>
+            <h3>Section A — Social Media Awareness (Multiple Choice)</h3>
+            <div class="meta">2 auto-marked multiple-choice questions</div>
+          </div>
+          <div class="meta">Tap to open</div>
+        </div>
+        <div class="acc-body" id="a-body" aria-hidden="true">
+          <!-- Improved MCQ examples -->
+          <div class="question">
+            <div class="q-title">1. Which of these is the strongest (safest) password?</div>
+            <div class="choices">
+              <label><input name="m1" type="radio" value="a"> A) MyName123</label>
+              <label><input name="m1" type="radio" value="b"> B) P@ssw0rd!</label>
+              <label><input name="m1" type="radio" value="c"> C) C@t#91$gH</label>
+              <label><input name="m1" type="radio" value="d"> D) 123456</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="q-title">2. Which is an example of personal information you should NOT share publicly?</div>
+            <div class="choices">
+              <label><input name="m2" type="radio" value="a"> A) Favourite colour</label>
+              <label><input name="m2" type="radio" value="b"> B) Home address</label>
+              <label><input name="m2" type="radio" value="c"> C) Favourite TV show</label>
+              <label><input name="m2" type="radio" value="d"> D) Pet’s name</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section B: Safe Practices (True/False) -->
+      <div class="acc-item" id="sec-b">
+        <div class="acc-head" tabindex="0" role="button" aria-expanded="false" data-target="b-body">
+          <div>
+            <h3>Section B — Safe Practices (True / False)</h3>
+            <div class="meta">3 quick true/false items</div>
+          </div>
+          <div class="meta">Tap to open</div>
+        </div>
+        <div class="acc-body" id="b-body" aria-hidden="true">
+          <div class="question">
+            <div class="q-title">1. It’s OK to share a classmate’s photo online if they don’t mind.</div>
+            <div class="choices">
+              <label><input name="t1" type="radio" value="true"> True</label>
+              <label><input name="t1" type="radio" value="false"> False</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="q-title">2. A private account makes your information completely safe.</div>
+            <div class="choices">
+              <label><input name="t2" type="radio" value="true"> True</label>
+              <label><input name="t2" type="radio" value="false"> False</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="q-title">3. Reporting a harmful post is the right action.</div>
+            <div class="choices">
+              <label><input name="t3" type="radio" value="true"> True</label>
+              <label><input name="t3" type="radio" value="false"> False</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section C: Online Behaviour (Fill in the Blank) -->
+      <div class="acc-item" id="sec-c">
+        <div class="acc-head" tabindex="0" role="button" aria-expanded="false" data-target="c-body">
+          <div>
+            <h3>Section C — Online Behaviour (Fill in the Blank)</h3>
+            <div class="meta">3 fill-in answers</div>
+          </div>
+          <div class="meta">Tap to open</div>
+        </div>
+        <div class="acc-body" id="c-body" aria-hidden="true">
+          <div class="question">
+            <div class="q-title">1. Always think before you <input id="fb1" placeholder="_____" style="width:140px; display:inline-block" />.</div>
+          </div>
+
+          <div class="question">
+            <div class="q-title">2. If someone is being bullied online, you should <input id="fb2" placeholder="_____" style="width:160px; display:inline-block" /> it.</div>
+          </div>
+
+          <div class="question">
+            <div class="q-title">3. The term for a scam that tricks you into giving information is called <input id="fb3" placeholder="_____" style="width:150px; display:inline-block" />.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section D: Reflection (Short Text) -->
+      <div class="acc-item" id="sec-d">
+        <div class="acc-head" tabindex="0" role="button" aria-expanded="false" data-target="d-body">
+          <div>
+            <h3>Section D — Reflection (Short Text)</h3>
+            <div class="meta">2 short written answers (teacher review)</div>
+          </div>
+          <div class="meta">Tap to open</div>
+        </div>
+        <div class="acc-body" id="d-body" aria-hidden="true">
+          <div class="question">
+            <div class="q-title">1. What can you do to make social media a more positive space?</div>
+            <textarea id="sa1" placeholder="1–3 sentences"></textarea>
+          </div>
+
+          <div class="question">
+            <div class="q-title">2. How do you know when it’s better not to comment on a post?</div>
+            <textarea id="sa2" placeholder="1–2 sentences"></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- accordion -->
+
+    <!-- Submit area (kept buttons, with new styles) -->
+    <section class="card" aria-label="submission area">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <button id="submitBtn" class="btn green"><i data-feather="check"></i> Submit Assessment</button>
+          <button id="clearBtn" class="btn red" style="margin-left:8px"><i data-feather="trash-2"></i> Clear Saved</button>
+          <button id="printBtn" class="btn blue" style="margin-left:8px"><i data-feather="printer"></i> Print Results</button>
+        </div>
+        <div class="muted">Auto-marked: MCQ, True/False, Fill-ins</div>
+      </div>
+    </section>
+
+    <footer style="text-align:center;margin-top:12px;color:var(--muted)">© 2025 Computer Science @ SVS</footer>
+  </div>
+
+  <!-- Floating FAB: opens phishing-detective.html in a new tab -->
+  <a class="fab" href="phishing-detective.html" target="_blank" rel="noopener noreferrer" title="Play Phishing Detective 🕵️‍♂️">🎮</a>
+
+  <!-- Modal: results -->
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" role="document" aria-live="polite">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <div>
+          <h2 id="modalTitle" style="margin:0">Your Results</h2>
+          <div id="modalSub" class="muted" style="margin-top:6px"></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="modalClose" class="btn ghost" aria-label="Close results"><i data-feather="x"></i> Close</button>
+          <button id="modalRetry" class="btn">Retry</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px" aria-hidden="false">
+        <div class="score-box" style="margin-top:8px;align-items:center">
+          <div class="score-pill" id="overallScore">--</div>
+          <div>
+            <div class="score-message" id="scoreMessage">—</div>
+            <div class="muted" id="scoreMeta" style="margin-top:6px"></div>
+          </div>
+        </div>
+
+        <div class="section-breakdown" id="sectionBreakdown" style="margin-top:12px"></div>
+
+        <div style="margin-top:12px">
+          <h4 style="margin:0 0 8px 0">Auto-marked question breakdown</h4>
+          <div id="autoBreakdown" class="muted" style="font-size:0.95rem"></div>
+        </div>
+
+        <div style="margin-top:12px">
+          <h4 style="margin:0 0 8px 0">Your written answers (for teacher)</h4>
+          <div id="writtenFB" style="background:#fbfdff;padding:10px;border-radius:8px;border:1px solid rgba(91,141,239,0.04)"></div>
+        </div>
+      </div>
     </div>
-  </header>
-
-  <main class="max-w-6xl mx-auto p-6 space-y-6">
-    <!-- (All your assessment sections remain unchanged from your original version) -->
-    <!-- Keep the same Matching, Diagram, MCQ, Fill-in, Written, and Results HTML structure here -->
-    <!-- The drag-drop logic below will apply to all of them automatically -->
-  </main>
-
-  <footer class="text-center text-sm text-gray-400 p-6">
-    © 2025 Computer Science @ SVS
-  </footer>
-
-  <a href="index.html" class="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white z-50">
-    <i data-feather="home" class="w-5 h-5"></i>
-  </a>
+  </div>
 
   <script>
     feather.replace();
 
-    // ---- Cross-device Drag/Drop Logic ----
-    let selectedItem = null;
+    /***** Utilities *****/
+    const norm = s => (s||'').toString().trim().toLowerCase();
 
-    function initDragAndDrop() {
-      document.querySelectorAll('.draggable').forEach(item => {
-        // Desktop drag start
-        item.addEventListener('dragstart', e => {
-          e.dataTransfer.setData('text/plain', item.dataset.key);
-          setTimeout(() => item.classList.add('opacity-50'), 0);
-        });
-        item.addEventListener('dragend', () => item.classList.remove('opacity-50'));
-
-        // Mobile tap select
-        item.addEventListener('touchstart', e => {
-          e.preventDefault();
-          document.querySelectorAll('.draggable').forEach(d => d.classList.remove('selected'));
-          if (selectedItem === item) {
-            selectedItem = null;
-          } else {
-            selectedItem = item;
-            item.classList.add('selected');
-          }
-        });
-      });
-
-      document.querySelectorAll('.layer-target').forEach(target => {
-        // Desktop
-        target.addEventListener('dragover', e => e.preventDefault());
-        target.addEventListener('dragenter', () => target.classList.add('hovered'));
-        target.addEventListener('dragleave', () => target.classList.remove('hovered'));
-        target.addEventListener('drop', e => {
-          e.preventDefault();
-          target.classList.remove('hovered');
-          const key = e.dataTransfer.getData('text/plain');
-          if (key) addTileToTarget(target, key);
-        });
-
-        // Mobile tap
-        target.addEventListener('touchstart', e => {
-          if (selectedItem) {
-            const key = selectedItem.dataset.key;
-            addTileToTarget(target, key);
-            selectedItem.classList.remove('selected');
-            selectedItem = null;
-          }
-        });
-      });
-    }
-
-    function addTileToTarget(target, key) {
-      const tile = document.createElement('div');
-      tile.className = 'tile';
-      tile.textContent = key;
-      tile.dataset.key = key;
-      tile.addEventListener('click', () => tile.remove());
-      target.appendChild(tile);
-    }
-
-    // Run after DOM is ready
-    window.addEventListener('DOMContentLoaded', () => {
-      initDragAndDrop();
+    /***** Accordion behaviour (all closed by default) *****/
+    document.querySelectorAll('.acc-head').forEach(h => {
+      const targetId = h.dataset.target;
+      const target = document.getElementById(targetId);
+      const setOpen = (open) => {
+        if(open){
+          target.classList.add('show');
+          target.setAttribute('aria-hidden','false');
+          h.setAttribute('aria-expanded','true');
+        } else {
+          target.classList.remove('show');
+          target.setAttribute('aria-hidden','true');
+          h.setAttribute('aria-expanded','false');
+        }
+      };
+      // ensure default closed
+      setOpen(false);
+      // click / keyboard toggle
+      h.addEventListener('click', ()=> setOpen(!target.classList.contains('show')));
+      h.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); setOpen(!target.classList.contains('show')); }});
     });
+
+    // help toggle for instructions
+    document.getElementById('helpToggle').addEventListener('click', ()=>{
+      const card = document.getElementById('instructionsCard');
+      const visible = card.style.display !== 'none';
+      card.style.display = visible ? 'none' : 'block';
+      card.setAttribute('aria-hidden', visible ? 'true' : 'false');
+    });
+
+    /***** Draggables not used in this simplified version, but keep placeholder in case you add them later *****/
+    // (No matching/diagram drag/drop in the simplified improved version - fill-ins used instead)
+
+    /***** Correct answers for new simplified content *****/
+    const mcqAnswers = { m1: 'c', m2: 'b' }; // m1 strongest password = c, m2 personal info = b
+    const tfAnswers = { t1: 'false', t2: 'false', t3: 'true' };
+    const fillAnswers = {
+      fb1: ['post','posting','post.','post!'],
+      fb2: ['report','tell an adult','tell an adult','tell someone','report it'],
+      fb3: ['phishing','phishing scam','phishing.','phishing scam.']
+    };
+
+    function checkFill(id, val) {
+      const v = norm(val);
+      if(!fillAnswers[id]) return false;
+      return fillAnswers[id].some(ans => norm(ans) === v);
+    }
+
+    /***** Submit logic & showResults *****/
+    document.getElementById('submitBtn').addEventListener('click', ()=> {
+      // MCQs
+      let mcqTotal = Object.keys(mcqAnswers).length, mcqCorrect = 0;
+      const mcqDetails = [];
+      for(const q in mcqAnswers){
+        const sel = document.querySelector('input[name="'+q+'"]:checked');
+        const chosen = sel ? sel.value : null;
+        const ok = chosen === mcqAnswers[q];
+        if(ok) mcqCorrect++;
+        mcqDetails.push({q,chosen,ok});
+      }
+
+      // True/False
+      let tfTotal = Object.keys(tfAnswers).length, tfCorrect = 0;
+      const tfDetails = [];
+      for(const q in tfAnswers){
+        const sel = document.querySelector('input[name="'+q+'"]:checked');
+        const chosen = sel ? sel.value : null;
+        const ok = chosen === tfAnswers[q];
+        if(ok) tfCorrect++;
+        tfDetails.push({q,chosen,ok});
+      }
+
+      // Fill-ins
+      let fillTotal = 3, fillCorrect = 0; const fillDetails = [];
+      for(let i=1;i<=3;i++){
+        const id = 'fb'+i; const val = (document.getElementById(id).value||'').trim();
+        const ok = checkFill(id,val);
+        if(ok) fillCorrect++;
+        fillDetails.push({id,answer:val,ok});
+      }
+
+      // Written answers
+      const wa1 = (document.getElementById('sa1').value||'').trim();
+      const wa2 = (document.getElementById('sa2').value||'').trim();
+
+      // Totals
+      const autoCorrect = mcqCorrect + tfCorrect + fillCorrect;
+      const autoTotal = mcqTotal + tfTotal + fillTotal;
+
+      const now = new Date().toLocaleString();
+      const results = {
+        date: now,
+        name: document.getElementById('studentName').value || '',
+        class: document.getElementById('studentClass').value || '',
+        mcqTotal, mcqCorrect, mcqDetails,
+        tfTotal, tfCorrect, tfDetails,
+        fillTotal, fillCorrect, fillDetails,
+        autoTotal, autoCorrect,
+        wa1, wa2
+      };
+
+      // localStorage: best & attempts (keep small footprint)
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem('socialMediaResults')); } catch(e){}
+      if(!saved) saved = {bestScore:0,attempts:0,bestDate:null};
+      saved.attempts = (saved.attempts || 0) + 1;
+      if(autoCorrect > (saved.bestScore || 0)) { saved.bestScore = autoCorrect; saved.bestDate = now; }
+      const store = {meta:saved, last:results};
+      localStorage.setItem('socialMediaResults', JSON.stringify(store));
+
+      // show results modal
+      showResults(store);
+    });
+
+    function showResults(store){
+      const out = store.last;
+
+      // Overall
+      const overallScoreEl = document.getElementById('overallScore');
+      overallScoreEl.textContent = `${out.autoCorrect}/${out.autoTotal}`;
+
+      // Score message & meta
+      const msgEl = document.getElementById('scoreMessage');
+      const metaEl = document.getElementById('scoreMeta');
+      const pct = Math.round((out.autoCorrect / out.autoTotal) * 100);
+      let msg = 'Keep learning!';
+      if(pct >= 85) msg = 'Excellent work!';
+      else if(pct >= 65) msg = 'Good job — keep improving.';
+      else if(pct >= 45) msg = 'You need a bit more practice.';
+      msgEl.textContent = msg;
+      metaEl.textContent = `Auto-marked • Best: ${store.meta.bestScore}/${out.autoTotal} (${store.meta.bestDate || '—'}) • Attempts: ${store.meta.attempts}`;
+
+      // Section breakdown
+      const sectionBreakdown = document.getElementById('sectionBreakdown');
+      sectionBreakdown.innerHTML = '';
+
+      // Section A — MCQ
+      sectionBreakdown.appendChild(makeSectionLine('Section A — Awareness (MCQ)', out.mcqCorrect, out.mcqTotal));
+
+      // Section B — True/False
+      sectionBreakdown.appendChild(makeSectionLine('Section B — Safe Practices (T/F)', out.tfCorrect, out.tfTotal));
+
+      // Section C — Fill-ins
+      sectionBreakdown.appendChild(makeSectionLine('Section C — Online Behaviour (Fill-ins)', out.fillCorrect, out.fillTotal));
+
+      // Auto-marked breakdown details
+      const autoBreak = document.getElementById('autoBreakdown');
+      autoBreak.innerHTML = '';
+
+      // MCQ details
+      const mcqList = document.createElement('div');
+      mcqList.innerHTML = '<strong>Multiple choice:</strong>';
+      const ul = document.createElement('ul');
+      out.mcqDetails.forEach((d,i)=>{
+        const li = document.createElement('li');
+        li.style.marginTop = '6px';
+        li.innerHTML = `Q${i+1}: ${d.ok ? '<span style="color:var(--success)">Correct</span>' : '<span style="color:var(--danger)">Wrong</span>'} — Answer: ${d.chosen || '<em>none</em>'}`;
+        ul.appendChild(li);
+      });
+      mcqList.appendChild(ul);
+      autoBreak.appendChild(mcqList);
+
+      // True/False details
+      const tfList = document.createElement('div');
+      tfList.style.marginTop = '10px';
+      tfList.innerHTML = '<strong>True / False:</strong>';
+      const ul2 = document.createElement('ul');
+      out.tfDetails.forEach((d,i)=>{
+        const li = document.createElement('li');
+        li.style.marginTop = '6px';
+        li.innerHTML = `Item ${i+1}: ${d.ok ? '<span style="color:var(--success)">Correct</span>' : '<span style="color:var(--danger)">Wrong</span>'} — Answer: ${d.chosen || '<em>none</em>'}`;
+        ul2.appendChild(li);
+      });
+      tfList.appendChild(ul2);
+      autoBreak.appendChild(tfList);
+
+      // Fill-in details
+      const fillList = document.createElement('div');
+      fillList.style.marginTop = '10px';
+      fillList.innerHTML = '<strong>Fill-ins:</strong>';
+      const ul3 = document.createElement('ul');
+      out.fillDetails.forEach((f,i)=>{
+        const li = document.createElement('li');
+        li.style.marginTop = '6px';
+        li.innerHTML = `F${i+1}: ${f.ok ? '<span style="color:var(--success)">Correct</span>' : '<span style="color:var(--danger)">Wrong</span>'} — "${f.answer||'<em>none</em>'}"`;
+        ul3.appendChild(li);
+      });
+      fillList.appendChild(ul3);
+      autoBreak.appendChild(fillList);
+
+      // Written answers area
+      const wfb = document.getElementById('writtenFB');
+      wfb.innerHTML = `<div><strong>1.</strong> ${out.wa1 || '<em>none</em>'}</div><div style="margin-top:8px"><strong>2.</strong> ${out.wa2 || '<em>none</em>'}</div>`;
+
+      // modal metadata
+      document.getElementById('modalSub').textContent = `${out.name ? out.name + (out.class ? ' • ' + out.class : '') : ''} ${out.date ? ' • ' + out.date : ''}`.trim();
+
+      // show modal
+      openModal();
+    }
+
+    function makeSectionLine(label, correct, total){
+      const div = document.createElement('div');
+      div.className = 'section-line';
+      const pct = total ? Math.round((correct/total)*100) : 0;
+      let cls = 'feedback-bad';
+      if(pct >= 85) cls = 'feedback-good';
+      else if(pct >= 65) cls = 'feedback-mid';
+
+      div.innerHTML = `<div style="display:flex;flex-direction:column"><div class="label">${label}</div><div class="small">${correct} / ${total} (${pct}%)</div></div><div class="${cls}">${pct}%</div>`;
+      return div;
+    }
+
+    /***** Modal open/close + focus trap *****/
+    const backdrop = document.getElementById('modalBackdrop');
+    const modalClose = document.getElementById('modalClose');
+    const modalRetry = document.getElementById('modalRetry');
+    function openModal(){
+      backdrop.classList.add('show');
+      backdrop.setAttribute('aria-hidden','false');
+      modalClose.focus();
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('focus', trapFocus, true);
+    }
+    function closeModal(){
+      backdrop.classList.remove('show');
+      backdrop.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      document.removeEventListener('focus', trapFocus, true);
+    }
+
+    modalClose.addEventListener('click', ()=> closeModal());
+    modalRetry.addEventListener('click', ()=> {
+      closeModal();
+      // scroll to top of first section
+      document.querySelector('#sec-a .acc-head').scrollIntoView({behavior:'smooth', block:'center'});
+      // clear auto-marked answers only
+      clearAutoMarked();
+    });
+
+    // close on backdrop click outside modal
+    backdrop.addEventListener('click', (e)=>{
+      if(e.target === backdrop) closeModal();
+    });
+    // close on ESC
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+    // focus trap helper
+    function trapFocus(e){
+      const modal = backdrop.querySelector('.modal');
+      if(!modal) return;
+      if(!modal.contains(e.target)) {
+        e.stopPropagation();
+        modalClose.focus();
+      }
+    }
+
+    /***** Clear / Print / Load saved *****/
+    document.getElementById('clearBtn').addEventListener('click', ()=> {
+      localStorage.removeItem('socialMediaResults');
+      showToast('Saved results cleared.');
+    });
+
+    document.getElementById('printBtn').addEventListener('click', ()=> {
+      // open modal with last saved results if available then print
+      const raw = localStorage.getItem('socialMediaResults');
+      if(raw){
+        try {
+          const store = JSON.parse(raw);
+          if(store.last) showResults(store);
+        } catch(e){}
+      }
+      setTimeout(()=> window.print(), 220);
+    });
+
+    // load saved on open (do not auto-show)
+    window.addEventListener('DOMContentLoaded', ()=> {
+      try {
+        const raw = localStorage.getItem('socialMediaResults');
+        if(raw){ const store = JSON.parse(raw); if(store.last) { /* do not auto show modal */ } }
+      } catch(e){}
+    });
+
+    // small toast (non-blocking)
+    function showToast(msg, ms=2800){
+      const t = document.createElement('div'); t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='20px';
+      t.style.background='linear-gradient(90deg,var(--primary),#3f74d8)'; t.style.color='white'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.boxShadow='0 10px 30px rgba(91,141,239,0.18)';
+      t.textContent = msg; t.style.zIndex = 1400;
+      document.body.appendChild(t);
+      setTimeout(()=> t.remove(), ms);
+    }
+
+    // clear only auto-marked fields helper
+    function clearAutoMarked(){
+      // clear MCQs & TFs
+      document.querySelectorAll('input[type="radio"]').forEach(r=> r.checked = false);
+      // clear fill-ins
+      for(let i=1;i<=3;i++) document.getElementById('fb'+i).value = '';
+      showToast('Auto-marked answers cleared.');
+    }
   </script>
 </body>
 </html>
