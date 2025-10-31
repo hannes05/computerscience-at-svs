@@ -12,16 +12,33 @@
       background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
       color: #e2e8f0;
       font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
     }
     #game-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 2rem auto;
+      margin: 1rem auto;
+      touch-action: manipulation; /* Better touch handling */
     }
-    canvas {
+    #game-container canvas {
       border-radius: 1rem;
       box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+      max-width: 100%;
+      height: auto !important; /* Allow canvas to scale */
+      display: block;
+    }
+    
+    /* Prevent canvas from blocking scroll on touch devices */
+    @media (max-width: 768px) {
+      #game-container {
+        margin: 0.5rem auto;
+        padding: 0 0.5rem;
+      }
+      #game-container canvas {
+        border-radius: 0.5rem;
+        touch-action: pan-y; /* Allow vertical scrolling */
+      }
     }
   </style>
 </head>
@@ -30,50 +47,53 @@
   
   <!-- HEADER -->
   <header class="bg-gray-900 bg-opacity-90 backdrop-blur border-b border-gray-700 sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
-      <a href="index.html" class="text-yellow-400 font-bold text-xl flex items-center">
-        <i data-feather="shield" class="w-6 h-6 mr-2 text-blue-400"></i>
-        Phishing Detective
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-3 md:p-4">
+      <a href="index.html" class="text-yellow-400 font-bold text-lg md:text-xl flex items-center">
+        <i data-feather="shield" class="w-5 h-5 md:w-6 md:h-6 mr-2 text-blue-400"></i>
+        <span class="hidden sm:inline">Phishing Detective</span>
+        <span class="sm:hidden">Phishing</span>
       </a>
-      <a href="home-esafety.html" class="text-blue-300 hover:text-blue-100 transition">
-        <i data-feather="arrow-left" class="w-5 h-5 inline mr-1"></i> Back to E-Safety
+      <a href="home-esafety.html" class="text-blue-300 hover:text-blue-100 transition text-sm md:text-base">
+        <i data-feather="arrow-left" class="w-4 h-4 md:w-5 md:h-5 inline mr-1"></i> 
+        <span class="hidden sm:inline">Back to E-Safety</span>
+        <span class="sm:hidden">Back</span>
       </a>
     </div>
   </header>
 
   <!-- GAME INFO -->
-  <div class="max-w-6xl mx-auto p-6">
-    <div class="bg-gray-900 bg-opacity-80 rounded-lg p-6 mb-4 border border-gray-700">
-      <h1 class="text-3xl font-bold text-yellow-400 mb-2">🕵️ Phishing Detective</h1>
-      <p class="text-gray-300 mb-4">Can you spot the phishing emails? Test your cyber security skills!</p>
+  <div class="max-w-6xl mx-auto p-3 md:p-6">
+    <div class="bg-gray-900 bg-opacity-80 rounded-lg p-4 md:p-6 mb-3 md:mb-4 border border-gray-700">
+      <h1 class="text-2xl md:text-3xl font-bold text-yellow-400 mb-2">🕵️ Phishing Detective</h1>
+      <p class="text-sm md:text-base text-gray-300 mb-3 md:mb-4">Can you spot the phishing emails? Test your cyber security skills!</p>
       
-      <div class="grid sm:grid-cols-3 gap-4 mb-4">
-        <div class="bg-gray-800 rounded p-3 text-center">
-          <p class="text-sm text-gray-400">Current Score</p>
-          <p class="text-2xl font-bold text-green-400" id="current-score">0</p>
+      <div class="grid grid-cols-3 gap-2 md:gap-4 mb-3 md:mb-4">
+        <div class="bg-gray-800 rounded p-2 md:p-3 text-center">
+          <p class="text-xs md:text-sm text-gray-400">Score</p>
+          <p class="text-xl md:text-2xl font-bold text-green-400" id="current-score">0</p>
         </div>
-        <div class="bg-gray-800 rounded p-3 text-center">
-          <p class="text-sm text-gray-400">High Score</p>
-          <p class="text-2xl font-bold text-blue-400" id="high-score">0</p>
+        <div class="bg-gray-800 rounded p-2 md:p-3 text-center">
+          <p class="text-xs md:text-sm text-gray-400">Best</p>
+          <p class="text-xl md:text-2xl font-bold text-blue-400" id="high-score">0</p>
         </div>
-        <div class="bg-gray-800 rounded p-3 text-center">
-          <p class="text-sm text-gray-400">Difficulty</p>
-          <p class="text-2xl font-bold text-yellow-400" id="difficulty-display">Easy</p>
+        <div class="bg-gray-800 rounded p-2 md:p-3 text-center">
+          <p class="text-xs md:text-sm text-gray-400">Level</p>
+          <p class="text-xl md:text-2xl font-bold text-yellow-400" id="difficulty-display">Easy</p>
         </div>
       </div>
 
       <div class="flex gap-2 flex-wrap">
-        <button id="btn-easy" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded font-semibold transition">
+        <button id="btn-easy" class="px-3 py-2 md:px-4 text-sm md:text-base bg-green-600 hover:bg-green-700 rounded font-semibold transition">
           Easy
         </button>
-        <button id="btn-medium" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded font-semibold transition">
+        <button id="btn-medium" class="px-3 py-2 md:px-4 text-sm md:text-base bg-yellow-600 hover:bg-yellow-700 rounded font-semibold transition">
           Medium
         </button>
-        <button id="btn-hard" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-semibold transition">
+        <button id="btn-hard" class="px-3 py-2 md:px-4 text-sm md:text-base bg-red-600 hover:bg-red-700 rounded font-semibold transition">
           Hard
         </button>
-        <button id="btn-restart" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold transition">
-          <i data-feather="refresh-cw" class="w-4 h-4 inline"></i> Restart
+        <button id="btn-restart" class="px-3 py-2 md:px-4 text-sm md:text-base bg-blue-600 hover:bg-blue-700 rounded font-semibold transition">
+          <i data-feather="refresh-cw" class="w-3 h-3 md:w-4 md:h-4 inline"></i> Restart
         </button>
       </div>
     </div>
@@ -82,9 +102,9 @@
     <div id="game-container"></div>
 
     <!-- HOW TO PLAY -->
-    <div class="bg-gray-900 bg-opacity-80 rounded-lg p-6 mt-4 border border-gray-700">
-      <h2 class="text-xl font-bold text-blue-400 mb-3">📖 How to Play</h2>
-      <ul class="space-y-2 text-gray-300">
+    <div class="bg-gray-900 bg-opacity-80 rounded-lg p-4 md:p-6 mt-3 md:mt-4 border border-gray-700">
+      <h2 class="text-lg md:text-xl font-bold text-blue-400 mb-3">📖 How to Play</h2>
+      <ul class="space-y-2 text-sm md:text-base text-gray-300">
         <li>✅ <strong>Green Button (SAFE):</strong> Click if the email looks legitimate</li>
         <li>❌ <strong>Red Button (PHISHING):</strong> Click if the email is a scam</li>
         <li>🎯 <strong>Score Points:</strong> +10 for correct answers, -5 for mistakes</li>
@@ -92,8 +112,8 @@
       </ul>
       
       <div class="mt-4 p-3 bg-yellow-900 bg-opacity-30 border border-yellow-700 rounded">
-        <p class="text-sm text-yellow-300"><strong>🔍 Phishing Signs to Look For:</strong></p>
-        <ul class="text-sm text-gray-300 mt-2 space-y-1">
+        <p class="text-sm font-semibold text-yellow-300">🔍 Phishing Signs to Look For:</p>
+        <ul class="text-xs md:text-sm text-gray-300 mt-2 space-y-1">
           <li>• Spelling and grammar mistakes</li>
           <li>• Urgent language ("Act now!", "Verify immediately!")</li>
           <li>• Suspicious sender email addresses</li>
@@ -105,20 +125,41 @@
   </div>
 
   <!-- Floating Back Button -->
-  <a href="index.html" class="fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50">
-    <i data-feather="home" class="w-6 h-6"></i>
+  <a href="index.html" class="fixed bottom-4 right-4 md:bottom-6 md:right-6 p-3 md:p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50">
+    <i data-feather="home" class="w-5 h-5 md:w-6 md:h-6"></i>
   </a>
 
   <script>
     feather.replace();
 
+    // Responsive game sizing
+    function getGameDimensions() {
+      const width = window.innerWidth;
+      if (width < 640) {
+        // Mobile: smaller game
+        return { width: Math.min(width - 20, 400), height: 500 };
+      } else if (width < 1024) {
+        // Tablet
+        return { width: Math.min(width - 40, 600), height: 550 };
+      } else {
+        // Desktop
+        return { width: 800, height: 600 };
+      }
+    }
+
+    const dimensions = getGameDimensions();
+
     // Game configuration
     const config = {
       type: Phaser.AUTO,
-      width: 800,
-      height: 600,
+      width: dimensions.width,
+      height: dimensions.height,
       parent: 'game-container',
       backgroundColor: '#1e293b',
+      scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+      },
       scene: {
         preload: preload,
         create: create,
@@ -143,6 +184,8 @@
     let timeLeft = 0;
     let maxTime = 30;
     let gameActive = false;
+    let gameWidth = dimensions.width;
+    let gameHeight = dimensions.height;
 
     // Email database
     const emails = {
@@ -178,79 +221,98 @@
       highScore = parseInt(localStorage.getItem('phishingHighScore')) || 0;
       document.getElementById('high-score').textContent = highScore;
 
+      // Responsive font sizes
+      const titleSize = gameWidth < 500 ? '24px' : '32px';
+      const emailSize = gameWidth < 500 ? '14px' : '18px';
+      const scoreSize = gameWidth < 500 ? '20px' : '24px';
+      const buttonSize = gameWidth < 500 ? '16px' : '20px';
+      const timerSize = gameWidth < 500 ? '14px' : '18px';
+
       // Title
-      this.add.text(400, 40, '🕵️ Phishing Detective', {
-        fontSize: '32px',
+      this.add.text(gameWidth / 2, 40, '🕵️ Phishing Detective', {
+        fontSize: titleSize,
         fill: '#fbbf24',
         fontFamily: 'Arial',
         fontStyle: 'bold'
       }).setOrigin(0.5);
 
-      // Email display area
-      const emailBox = this.add.rectangle(400, 250, 700, 280, 0x1e293b);
+      // Email display area - responsive sizing
+      const emailBoxHeight = gameHeight < 550 ? 220 : 280;
+      const emailBoxY = gameHeight < 550 ? 200 : 250;
+      const emailBox = this.add.rectangle(gameWidth / 2, emailBoxY, gameWidth - 100, emailBoxHeight, 0x1e293b);
       emailBox.setStrokeStyle(2, 0x3b82f6);
 
-      emailText = this.add.text(400, 250, 'Click START to begin!', {
-        fontSize: '18px',
+      emailText = this.add.text(gameWidth / 2, emailBoxY, 'Click START to begin!', {
+        fontSize: emailSize,
         fill: '#e2e8f0',
         fontFamily: 'Courier New',
         align: 'left',
-        wordWrap: { width: 650 }
+        wordWrap: { width: gameWidth - 150 }
       }).setOrigin(0.5);
 
       // Score
-      scoreText = this.add.text(400, 450, 'Score: 0', {
-        fontSize: '24px',
+      const scoreY = gameHeight < 550 ? gameHeight - 150 : gameHeight - 150;
+      scoreText = this.add.text(gameWidth / 2, scoreY, 'Score: 0', {
+        fontSize: scoreSize,
         fill: '#10b981',
         fontFamily: 'Arial',
         fontStyle: 'bold'
       }).setOrigin(0.5);
 
       // Timer bar background
-      this.add.rectangle(400, 490, 600, 20, 0x374151);
-      timerBar = this.add.rectangle(100, 490, 600, 20, 0x3b82f6);
+      const timerY = gameHeight < 550 ? gameHeight - 110 : gameHeight - 110;
+      const barWidth = gameWidth - 200;
+      this.add.rectangle(gameWidth / 2, timerY, barWidth, 20, 0x374151);
+      timerBar = this.add.rectangle((gameWidth - barWidth) / 2, timerY, barWidth, 20, 0x3b82f6);
       timerBar.setOrigin(0, 0.5);
+      timerBar.maxWidth = barWidth;
 
       // Timer text
-      timerText = this.add.text(400, 515, 'Time: 30s', {
-        fontSize: '18px',
+      timerText = this.add.text(gameWidth / 2, timerY + 25, 'Time: 30s', {
+        fontSize: timerSize,
         fill: '#93c5fd',
         fontFamily: 'Arial'
       }).setOrigin(0.5);
 
-      // Buttons
-      safeBtn = this.add.rectangle(250, 550, 200, 50, 0x10b981);
+      // Buttons - responsive positioning
+      const buttonY = gameHeight - 50;
+      const buttonWidth = gameWidth < 500 ? 140 : 200;
+      const buttonGap = gameWidth < 500 ? 50 : 100;
+      
+      safeBtn = this.add.rectangle(gameWidth / 2 - buttonGap, buttonY, buttonWidth, 50, 0x10b981);
       safeBtn.setInteractive();
       safeBtn.on('pointerdown', () => checkAnswer(false));
       safeBtn.on('pointerover', () => safeBtn.setFillStyle(0x059669));
       safeBtn.on('pointerout', () => safeBtn.setFillStyle(0x10b981));
 
-      this.add.text(250, 550, '✅ SAFE', {
-        fontSize: '20px',
+      this.add.text(gameWidth / 2 - buttonGap, buttonY, '✅ SAFE', {
+        fontSize: buttonSize,
         fill: '#ffffff',
         fontFamily: 'Arial',
         fontStyle: 'bold'
       }).setOrigin(0.5);
 
-      phishingBtn = this.add.rectangle(550, 550, 200, 50, 0xef4444);
+      phishingBtn = this.add.rectangle(gameWidth / 2 + buttonGap, buttonY, buttonWidth, 50, 0xef4444);
       phishingBtn.setInteractive();
       phishingBtn.on('pointerdown', () => checkAnswer(true));
       phishingBtn.on('pointerover', () => phishingBtn.setFillStyle(0xdc2626));
       phishingBtn.on('pointerout', () => phishingBtn.setFillStyle(0xef4444));
 
-      this.add.text(550, 550, '❌ PHISHING', {
-        fontSize: '20px',
+      this.add.text(gameWidth / 2 + buttonGap, buttonY, '❌ PHISHING', {
+        fontSize: buttonSize,
         fill: '#ffffff',
         fontFamily: 'Arial',
         fontStyle: 'bold'
       }).setOrigin(0.5);
 
       // Feedback text
-      feedbackText = this.add.text(400, 420, '', {
-        fontSize: '20px',
+      feedbackText = this.add.text(gameWidth / 2, scoreY - 30, '', {
+        fontSize: buttonSize,
         fill: '#fbbf24',
         fontFamily: 'Arial',
-        fontStyle: 'bold'
+        fontStyle: 'bold',
+        wordWrap: { width: gameWidth - 100 },
+        align: 'center'
       }).setOrigin(0.5);
 
       // Start first email
@@ -264,7 +326,7 @@
         timerText.setText(`Time: ${Math.ceil(timeLeft)}s`);
         
         // Update timer bar
-        const barWidth = (timeLeft / maxTime) * 600;
+        const barWidth = (timeLeft / maxTime) * timerBar.maxWidth;
         timerBar.setSize(barWidth, 20);
         
         // Change color based on time
@@ -359,6 +421,12 @@
     document.getElementById('btn-medium').addEventListener('click', () => setDifficulty('medium'));
     document.getElementById('btn-hard').addEventListener('click', () => setDifficulty('hard'));
     document.getElementById('btn-restart').addEventListener('click', () => restartGame());
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      // Note: Phaser 3 handles auto-resize with FIT scale mode
+      feather.replace(); // Re-render icons after resize
+    });
   </script>
 
 </body>

@@ -73,14 +73,26 @@
     .acc-item{border-radius:10px; overflow:hidden; border:1px solid rgba(14,47,99,0.04); margin-bottom:10px;}
     .acc-head{
       display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:linear-gradient(90deg,#fff,#f7fbff);
-      cursor:pointer; gap:12px;
+      cursor:pointer; gap:12px; transition: background 0.2s ease;
     }
+    .acc-head:hover{background:linear-gradient(90deg,#f7fbff,#eef6ff)}
+    .acc-head.active{background:linear-gradient(90deg,#eef6ff,#e6f2ff)}
     .acc-head h3{margin:0;font-size:1rem;color:var(--text)}
     .acc-head .meta { color:var(--muted); font-size:0.9rem }
-    .acc-body{padding:14px;border-top:1px solid rgba(14,47,99,0.04); display:none; animation:fadeIn .22s ease}
-    .acc-body.show{display:block}
-
-    @keyframes fadeIn { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+    .acc-head .toggle-icon{transition: transform 0.3s ease; color:var(--primary)}
+    .acc-head.active .toggle-icon{transform: rotate(180deg)}
+    .acc-body{
+      padding:0 14px;
+      max-height:0;
+      overflow:hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      border-top:1px solid transparent;
+    }
+    .acc-body.show{
+      padding:14px;
+      max-height:2000px;
+      border-top:1px solid rgba(14,47,99,0.04);
+    }
 
     /* ---------- questions ---------- */
     .question{background:#f6fbff;padding:12px;border-radius:8px;border:1px solid rgba(14,47,99,0.03); margin-bottom:10px;}
@@ -94,21 +106,7 @@
 
     textarea{min-height:72px; resize:vertical}
 
-    /* ---------- matching / draggable ---------- */
-    .pool{display:flex;flex-wrap:wrap; gap:8px}
-    .draggable{
-      cursor:grab;padding:8px 12px;border-radius:10px;background:linear-gradient(180deg,#F0F6FF,#ECF7FF);
-      border:1px solid rgba(91,141,239,0.15); color:var(--primary); font-weight:600; user-select:none;
-      box-shadow: 0 6px 14px rgba(91,141,239,0.06);
-    }
-    .layer-target{
-      min-height:54px;border-radius:8px;border:2px dashed rgba(14,47,99,0.06);
-      display:flex;align-items:center;justify-content:center;padding:8px; background:linear-gradient(180deg,#fff,#fbfdff);
-    }
-    .tile{padding:6px 10px;border-radius:8px;background:var(--glass);border:1px solid rgba(91,141,239,0.10); color:var(--primary); font-weight:600; margin:4px; cursor:pointer}
-    .tile:active{transform:scale(0.98)}
-
-    /* ---------- buttons (kept labels/roles but styled) ---------- */
+    /* ---------- buttons ---------- */
     .btn{
       display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;
       font-weight:700; font-size:0.95rem; box-shadow: 0 6px 20px rgba(91,141,239,0.08);
@@ -118,7 +116,7 @@
     .btn:focus{outline:3px solid rgba(91,141,239,0.18); outline-offset:2px}
     .btn:hover{ box-shadow: 0 10px 30px rgba(91,141,239,0.16); transform: translateY(-2px) }
     .btn:active{ transform: translateY(0); box-shadow: 0 6px 16px rgba(91,141,239,0.09) }
-    .btn.ghost{ background:transparent; color:var(--primary); border:1px solid rgba(91,141,239,0.12); font-weight:600 }
+    .btn.ghost{ background:transparent; color:var(--primary); border:1px solid rgba(91,141,239,0.12); font-weight:600; box-shadow:none }
     .btn.red{ background: linear-gradient(180deg,#ff6b6b,#ef4b4b) }
     .btn.blue{ background: linear-gradient(180deg,#3b82f6,#2563eb) }
     .btn.green{ background: linear-gradient(180deg,#34d399,#10b981) }
@@ -129,24 +127,98 @@
     .hint{color:var(--muted);font-size:0.9rem}
     .divider{height:1px;background:linear-gradient(90deg, transparent, rgba(14,47,99,0.04), transparent); margin:12px 0}
 
-    /* results modal */
-    .modal-backdrop{position:fixed;inset:0;background:rgba(24,29,63,0.45); display:none; align-items:center;justify-content:center; z-index:1200; padding:20px}
+    /* FIXED: results modal - now responsive and scrollable */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(24,29,63,0.45); 
+      display:none; 
+      align-items:center;
+      justify-content:center; 
+      z-index:1200; 
+      padding:16px;
+      overflow-y:auto;
+    }
     .modal-backdrop.show{display:flex}
+    
     .modal{
-      background:var(--card); width:100%; max-width:720px;border-radius:14px;padding:18px; box-shadow: 0 20px 60px rgba(20,30,60,0.18);
+      background:var(--card); 
+      width:100%; 
+      max-width:650px;
+      max-height:90vh;
+      border-radius:14px;
+      padding:20px; 
+      box-shadow: 0 20px 60px rgba(20,30,60,0.18);
       border: 1px solid rgba(91,141,239,0.10);
       transform-origin:center center;
+      margin:auto;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
     }
-    .modal .score-box{display:flex;align-items:center;gap:14px}
-    .score-pill{font-weight:800;font-size:1.4rem;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--primary),#3f74d8);color:white;box-shadow:0 8px 30px rgba(91,141,239,0.18)}
-    .score-message{font-weight:700;color:var(--text)}
-    .section-breakdown{margin-top:12px;border-radius:8px;padding:10px;background:#f7fbff;border:1px solid rgba(91,141,239,0.04)}
-    .section-line{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:8px 6px;border-radius:8px}
-    .section-line .label{font-weight:600}
-    .section-line .small{color:var(--muted);font-size:0.92rem}
-    .feedback-good{color:var(--success)}
-    .feedback-mid{color:var(--warn)}
-    .feedback-bad{color:var(--danger)}
+    
+    .modal-header{
+      flex-shrink:0;
+      padding-bottom:12px;
+      border-bottom:1px solid rgba(14,47,99,0.06);
+    }
+    
+    .modal-content{
+      flex:1;
+      overflow-y:auto;
+      padding-top:12px;
+      margin-right:-8px;
+      padding-right:8px;
+    }
+    
+    .modal-content::-webkit-scrollbar{
+      width:8px;
+    }
+    .modal-content::-webkit-scrollbar-track{
+      background:rgba(91,141,239,0.04);
+      border-radius:4px;
+    }
+    .modal-content::-webkit-scrollbar-thumb{
+      background:rgba(91,141,239,0.2);
+      border-radius:4px;
+    }
+    .modal-content::-webkit-scrollbar-thumb:hover{
+      background:rgba(91,141,239,0.3);
+    }
+    
+    .score-box{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .score-pill{
+      font-weight:800;
+      font-size:1.3rem;
+      padding:8px 14px;
+      border-radius:10px;
+      background:linear-gradient(90deg,var(--primary),#3f74d8);
+      color:white;
+      box-shadow:0 8px 30px rgba(91,141,239,0.18);
+      white-space:nowrap;
+    }
+    .score-message{font-weight:700;color:var(--text);font-size:1.1rem}
+    .section-breakdown{
+      margin-top:12px;
+      border-radius:8px;
+      padding:10px;
+      background:#f7fbff;
+      border:1px solid rgba(91,141,239,0.04)
+    }
+    .section-line{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      padding:8px 6px;
+      border-radius:8px;
+      flex-wrap:wrap;
+    }
+    .section-line .label{font-weight:600;font-size:0.95rem}
+    .section-line .small{color:var(--muted);font-size:0.85rem;margin-top:2px}
+    .feedback-good{color:var(--success);font-weight:700}
+    .feedback-mid{color:var(--warn);font-weight:700}
+    .feedback-bad{color:var(--danger);font-weight:700}
 
     /* FAB */
     .fab{
@@ -162,10 +234,67 @@
     @media (max-width:720px){
       .wrap{padding:12px}
       .acc-head{padding:10px}
-      .acc-body{padding:12px}
+      .acc-body.show{padding:12px}
       .card{padding:12px}
-      .modal{padding:14px}
+      .modal{
+        padding:16px;
+        max-width:100%;
+        max-height:95vh;
+        border-radius:12px;
+      }
+      .modal-header{
+        padding-bottom:10px;
+      }
+      .score-pill{
+        font-size:1.15rem;
+        padding:6px 12px;
+      }
+      .score-message{
+        font-size:1rem;
+      }
       header{flex-direction:column;align-items:flex-start;gap:8px}
+      .modal-header > div:first-child{
+        flex-direction:column;
+        align-items:flex-start !important;
+        gap:10px !important;
+      }
+      .modal-header h2{
+        font-size:1.3rem;
+      }
+      .section-line{
+        font-size:0.9rem;
+      }
+    }
+    
+    @media (max-width:480px){
+      .modal{
+        padding:14px;
+        max-height:96vh;
+      }
+      .score-box{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+      }
+    }
+
+    /* Toast notification */
+    .toast{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:20px;
+      background:linear-gradient(90deg,var(--primary),#3f74d8);
+      color:white;
+      padding:12px 16px;
+      border-radius:10px;
+      box-shadow:0 10px 30px rgba(91,141,239,0.25);
+      z-index:1400;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp{
+      from{opacity:0;transform:translateX(-50%) translateY(20px)}
+      to{opacity:1;transform:translateX(-50%) translateY(0)}
     }
   </style>
 </head>
@@ -178,14 +307,14 @@
         <h1>Social Media Awareness Assessment</h1>
         <p>Test your understanding of online safety, responsible posting, and digital citizenship.</p>
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <div class="badge">KS3 • Year 7</div>
         <button class="btn ghost" id="helpToggle" title="Toggle instructions"><i data-feather="info"></i> Instructions</button>
       </div>
     </header>
 
     <!-- instructions card (collapsed by default) -->
-    <section class="card" id="instructionsCard" aria-hidden="true" style="display:none">
+    <section class="card" id="instructionsCard" style="display:none">
       <div class="instructions">
         <div style="min-width:54px; height:54px; border-radius:12px; background:linear-gradient(180deg,var(--primary-100),#eef7ff); display:flex; align-items:center; justify-content:center">
           <i data-feather="book" style="color:var(--primary)"></i>
@@ -205,16 +334,15 @@
     <div class="accordion">
 
       <!-- Section A: Awareness (MCQ) -->
-      <div class="acc-item" id="sec-a">
-        <div class="acc-head" tabindex="0" role="button" aria-expanded="false" data-target="a-body">
+      <div class="acc-item">
+        <div class="acc-head" data-target="a-body">
           <div>
             <h3>Section A — Social Media Awareness (Multiple Choice)</h3>
             <div class="meta">2 auto-marked multiple-choice questions</div>
           </div>
-          <div class="meta">Tap to open</div>
+          <i data-feather="chevron-down" class="toggle-icon"></i>
         </div>
-        <div class="acc-body" id="a-body" aria-hidden="true">
-          <!-- Improved MCQ examples -->
+        <div class="acc-body" id="a-body">
           <div class="question">
             <div class="q-title">1. Which of these is the strongest (safest) password?</div>
             <div class="choices">
@@ -231,24 +359,24 @@
               <label><input name="m2" type="radio" value="a"> A) Favourite colour</label>
               <label><input name="m2" type="radio" value="b"> B) Home address</label>
               <label><input name="m2" type="radio" value="c"> C) Favourite TV show</label>
-              <label><input name="m2" type="radio" value="d"> D) Pet’s name</label>
+              <label><input name="m2" type="radio" value="d"> D) Pet's name</label>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Section B: Safe Practices (True/False) -->
-      <div class="acc-item" id="sec-b">
-        <div class="acc-head" tabindex="0" role="button" aria-expanded="false" data-target="b-body">
+      <div class="acc-item">
+        <div class="acc-head" data-target="b-body">
           <div>
             <h3>Section B — Safe Practices (True / False)</h3>
             <div class="meta">3 quick true/false items</div>
           </div>
-          <div class="meta">Tap to open</div>
+          <i data-feather="chevron-down" class="toggle-icon"></i>
         </div>
-        <div class="acc-body" id="b-body" aria-hidden="true">
+        <div class="acc-body" id="b-body">
           <div class="question">
-            <div class="q-title">1. It’s OK to share a classmate’s photo online if they don’t mind.</div>
+            <div class="q-title">1. It's OK to share a classmate's photo online if they don't mind.</div>
             <div class="choices">
               <label><input name="t1" type="radio" value="true"> True</label>
               <label><input name="t1" type="radio" value="false"> False</label>
@@ -274,15 +402,15 @@
       </div>
 
       <!-- Section C: Online Behaviour (Fill in the Blank) -->
-      <div class="acc-item" id="sec-c">
-        <div class="acc-head" tabindex="0" role="button" aria-expanded="false" data-target="c-body">
+      <div class="acc-item">
+        <div class="acc-head" data-target="c-body">
           <div>
             <h3>Section C — Online Behaviour (Fill in the Blank)</h3>
             <div class="meta">3 fill-in answers</div>
           </div>
-          <div class="meta">Tap to open</div>
+          <i data-feather="chevron-down" class="toggle-icon"></i>
         </div>
-        <div class="acc-body" id="c-body" aria-hidden="true">
+        <div class="acc-body" id="c-body">
           <div class="question">
             <div class="q-title">1. Always think before you <input id="fb1" placeholder="_____" style="width:140px; display:inline-block" />.</div>
           </div>
@@ -298,22 +426,22 @@
       </div>
 
       <!-- Section D: Reflection (Short Text) -->
-      <div class="acc-item" id="sec-d">
-        <div class="acc-head" tabindex="0" role="button" aria-expanded="false" data-target="d-body">
+      <div class="acc-item">
+        <div class="acc-head" data-target="d-body">
           <div>
             <h3>Section D — Reflection (Short Text)</h3>
             <div class="meta">2 short written answers (teacher review)</div>
           </div>
-          <div class="meta">Tap to open</div>
+          <i data-feather="chevron-down" class="toggle-icon"></i>
         </div>
-        <div class="acc-body" id="d-body" aria-hidden="true">
+        <div class="acc-body" id="d-body">
           <div class="question">
             <div class="q-title">1. What can you do to make social media a more positive space?</div>
             <textarea id="sa1" placeholder="1–3 sentences"></textarea>
           </div>
 
           <div class="question">
-            <div class="q-title">2. How do you know when it’s better not to comment on a post?</div>
+            <div class="q-title">2. How do you know when it's better not to comment on a post?</div>
             <textarea id="sa2" placeholder="1–2 sentences"></textarea>
           </div>
         </div>
@@ -321,13 +449,13 @@
 
     </div> <!-- accordion -->
 
-    <!-- Submit area (kept buttons, with new styles) -->
-    <section class="card" aria-label="submission area">
+    <!-- Submit area -->
+    <section class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-        <div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button id="submitBtn" class="btn green"><i data-feather="check"></i> Submit Assessment</button>
-          <button id="clearBtn" class="btn red" style="margin-left:8px"><i data-feather="trash-2"></i> Clear Saved</button>
-          <button id="printBtn" class="btn blue" style="margin-left:8px"><i data-feather="printer"></i> Print Results</button>
+          <button id="clearBtn" class="btn red"><i data-feather="trash-2"></i> Clear Saved</button>
+          <button id="printBtn" class="btn blue"><i data-feather="printer"></i> Print Results</button>
         </div>
         <div class="muted">Auto-marked: MCQ, True/False, Fill-ins</div>
       </div>
@@ -336,92 +464,93 @@
     <footer style="text-align:center;margin-top:12px;color:var(--muted)">© 2025 Computer Science @ SVS</footer>
   </div>
 
-  <!-- Floating FAB: opens phishing-detective.html in a new tab -->
+  <!-- Floating FAB -->
   <a class="fab" href="phishing-detective.html" target="_blank" rel="noopener noreferrer" title="Play Phishing Detective 🕵️‍♂️">🎮</a>
 
   <!-- Modal: results -->
-  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal" role="document" aria-live="polite">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-        <div>
-          <h2 id="modalTitle" style="margin:0">Your Results</h2>
-          <div id="modalSub" class="muted" style="margin-top:6px"></div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="modalClose" class="btn ghost" aria-label="Close results"><i data-feather="x"></i> Close</button>
-          <button id="modalRetry" class="btn">Retry</button>
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      
+      <div class="modal-header">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <h2 id="modalTitle" style="margin:0">Your Results</h2>
+            <div id="modalSub" class="muted" style="margin-top:4px;font-size:0.85rem"></div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button id="modalClose" class="btn ghost" style="padding:8px 12px"><i data-feather="x"></i> Close</button>
+            <button id="modalRetry" class="btn" style="padding:8px 12px">Retry</button>
+          </div>
         </div>
       </div>
 
-      <div style="margin-top:12px" aria-hidden="false">
-        <div class="score-box" style="margin-top:8px;align-items:center">
+      <div class="modal-content">
+        <div class="score-box" style="margin-top:8px">
           <div class="score-pill" id="overallScore">--</div>
-          <div>
+          <div style="flex:1">
             <div class="score-message" id="scoreMessage">—</div>
-            <div class="muted" id="scoreMeta" style="margin-top:6px"></div>
+            <div class="muted" id="scoreMeta" style="margin-top:4px;font-size:0.85rem"></div>
           </div>
         </div>
 
-        <div class="section-breakdown" id="sectionBreakdown" style="margin-top:12px"></div>
+        <div class="section-breakdown" id="sectionBreakdown" style="margin-top:14px"></div>
 
-        <div style="margin-top:12px">
-          <h4 style="margin:0 0 8px 0">Auto-marked question breakdown</h4>
-          <div id="autoBreakdown" class="muted" style="font-size:0.95rem"></div>
+        <div style="margin-top:14px">
+          <h4 style="margin:0 0 8px 0;font-size:1rem">Auto-marked question breakdown</h4>
+          <div id="autoBreakdown" class="muted" style="font-size:0.9rem"></div>
         </div>
 
-        <div style="margin-top:12px">
-          <h4 style="margin:0 0 8px 0">Your written answers (for teacher)</h4>
-          <div id="writtenFB" style="background:#fbfdff;padding:10px;border-radius:8px;border:1px solid rgba(91,141,239,0.04)"></div>
+        <div style="margin-top:14px">
+          <h4 style="margin:0 0 8px 0;font-size:1rem">Your written answers (for teacher)</h4>
+          <div id="writtenFB" style="background:#fbfdff;padding:10px;border-radius:8px;border:1px solid rgba(91,141,239,0.04);font-size:0.9rem"></div>
         </div>
       </div>
+      
     </div>
   </div>
 
   <script>
+    // Initialize feather icons
     feather.replace();
 
     /***** Utilities *****/
     const norm = s => (s||'').toString().trim().toLowerCase();
 
-    /***** Accordion behaviour (all closed by default) *****/
-    document.querySelectorAll('.acc-head').forEach(h => {
-      const targetId = h.dataset.target;
-      const target = document.getElementById(targetId);
-      const setOpen = (open) => {
-        if(open){
-          target.classList.add('show');
-          target.setAttribute('aria-hidden','false');
-          h.setAttribute('aria-expanded','true');
+    /***** FIX 1: Accordion behaviour - NOW WORKING *****/
+    document.querySelectorAll('.acc-head').forEach(head => {
+      head.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const body = document.getElementById(targetId);
+        const isOpen = body.classList.contains('show');
+        
+        // Toggle this section
+        if (isOpen) {
+          body.classList.remove('show');
+          this.classList.remove('active');
         } else {
-          target.classList.remove('show');
-          target.setAttribute('aria-hidden','true');
-          h.setAttribute('aria-expanded','false');
+          body.classList.add('show');
+          this.classList.add('active');
         }
-      };
-      // ensure default closed
-      setOpen(false);
-      // click / keyboard toggle
-      h.addEventListener('click', ()=> setOpen(!target.classList.contains('show')));
-      h.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); setOpen(!target.classList.contains('show')); }});
+        
+        // Re-render feather icons
+        feather.replace();
+      });
     });
 
-    // help toggle for instructions
-    document.getElementById('helpToggle').addEventListener('click', ()=>{
+    /***** FIX 2: Help toggle - NOW WORKING *****/
+    document.getElementById('helpToggle').addEventListener('click', function() {
       const card = document.getElementById('instructionsCard');
-      const visible = card.style.display !== 'none';
-      card.style.display = visible ? 'none' : 'block';
-      card.setAttribute('aria-hidden', visible ? 'true' : 'false');
+      const isVisible = card.style.display !== 'none';
+      card.style.display = isVisible ? 'none' : 'block';
+      feather.replace();
     });
 
-    /***** Draggables not used in this simplified version, but keep placeholder in case you add them later *****/
-    // (No matching/diagram drag/drop in the simplified improved version - fill-ins used instead)
-
-    /***** Correct answers for new simplified content *****/
-    const mcqAnswers = { m1: 'c', m2: 'b' }; // m1 strongest password = c, m2 personal info = b
+    /***** Correct answers *****/
+    const mcqAnswers = { m1: 'c', m2: 'b' };
     const tfAnswers = { t1: 'false', t2: 'false', t3: 'true' };
     const fillAnswers = {
       fb1: ['post','posting','post.','post!'],
-      fb2: ['report','tell an adult','tell an adult','tell someone','report it'],
+      fb2: ['report','tell an adult','tell someone','report it'],
       fb3: ['phishing','phishing scam','phishing.','phishing scam.']
     };
 
@@ -431,8 +560,8 @@
       return fillAnswers[id].some(ans => norm(ans) === v);
     }
 
-    /***** Submit logic & showResults *****/
-    document.getElementById('submitBtn').addEventListener('click', ()=> {
+    /***** FIX 3: Submit button - NOW WORKING *****/
+    document.getElementById('submitBtn').addEventListener('click', function() {
       // MCQs
       let mcqTotal = Object.keys(mcqAnswers).length, mcqCorrect = 0;
       const mcqDetails = [];
@@ -456,9 +585,11 @@
       }
 
       // Fill-ins
-      let fillTotal = 3, fillCorrect = 0; const fillDetails = [];
+      let fillTotal = 3, fillCorrect = 0;
+      const fillDetails = [];
       for(let i=1;i<=3;i++){
-        const id = 'fb'+i; const val = (document.getElementById(id).value||'').trim();
+        const id = 'fb'+i;
+        const val = (document.getElementById(id).value||'').trim();
         const ok = checkFill(id,val);
         if(ok) fillCorrect++;
         fillDetails.push({id,answer:val,ok});
@@ -484,103 +615,79 @@
         wa1, wa2
       };
 
-      // localStorage: best & attempts (keep small footprint)
+      // localStorage
       let saved = null;
       try { saved = JSON.parse(localStorage.getItem('socialMediaResults')); } catch(e){}
       if(!saved) saved = {bestScore:0,attempts:0,bestDate:null};
       saved.attempts = (saved.attempts || 0) + 1;
-      if(autoCorrect > (saved.bestScore || 0)) { saved.bestScore = autoCorrect; saved.bestDate = now; }
+      if(autoCorrect > (saved.bestScore || 0)) { 
+        saved.bestScore = autoCorrect; 
+        saved.bestDate = now; 
+      }
       const store = {meta:saved, last:results};
       localStorage.setItem('socialMediaResults', JSON.stringify(store));
 
-      // show results modal
+      // Show results
       showResults(store);
     });
 
     function showResults(store){
       const out = store.last;
 
-      // Overall
-      const overallScoreEl = document.getElementById('overallScore');
-      overallScoreEl.textContent = `${out.autoCorrect}/${out.autoTotal}`;
+      // Overall score
+      document.getElementById('overallScore').textContent = `${out.autoCorrect}/${out.autoTotal}`;
 
-      // Score message & meta
-      const msgEl = document.getElementById('scoreMessage');
-      const metaEl = document.getElementById('scoreMeta');
+      // Message
       const pct = Math.round((out.autoCorrect / out.autoTotal) * 100);
       let msg = 'Keep learning!';
       if(pct >= 85) msg = 'Excellent work!';
       else if(pct >= 65) msg = 'Good job — keep improving.';
       else if(pct >= 45) msg = 'You need a bit more practice.';
-      msgEl.textContent = msg;
-      metaEl.textContent = `Auto-marked • Best: ${store.meta.bestScore}/${out.autoTotal} (${store.meta.bestDate || '—'}) • Attempts: ${store.meta.attempts}`;
+      document.getElementById('scoreMessage').textContent = msg;
+      document.getElementById('scoreMeta').textContent = `Auto-marked • Best: ${store.meta.bestScore}/${out.autoTotal} (${store.meta.bestDate || '—'}) • Attempts: ${store.meta.attempts}`;
 
       // Section breakdown
       const sectionBreakdown = document.getElementById('sectionBreakdown');
       sectionBreakdown.innerHTML = '';
-
-      // Section A — MCQ
       sectionBreakdown.appendChild(makeSectionLine('Section A — Awareness (MCQ)', out.mcqCorrect, out.mcqTotal));
-
-      // Section B — True/False
       sectionBreakdown.appendChild(makeSectionLine('Section B — Safe Practices (T/F)', out.tfCorrect, out.tfTotal));
-
-      // Section C — Fill-ins
       sectionBreakdown.appendChild(makeSectionLine('Section C — Online Behaviour (Fill-ins)', out.fillCorrect, out.fillTotal));
 
-      // Auto-marked breakdown details
+      // Auto-marked breakdown
       const autoBreak = document.getElementById('autoBreakdown');
       autoBreak.innerHTML = '';
 
       // MCQ details
-      const mcqList = document.createElement('div');
-      mcqList.innerHTML = '<strong>Multiple choice:</strong>';
-      const ul = document.createElement('ul');
+      let mcqHTML = '<div><strong>Multiple choice:</strong><ul style="margin-top:6px">';
       out.mcqDetails.forEach((d,i)=>{
-        const li = document.createElement('li');
-        li.style.marginTop = '6px';
-        li.innerHTML = `Q${i+1}: ${d.ok ? '<span style="color:var(--success)">Correct</span>' : '<span style="color:var(--danger)">Wrong</span>'} — Answer: ${d.chosen || '<em>none</em>'}`;
-        ul.appendChild(li);
+        mcqHTML += `<li style="margin-top:4px">Q${i+1}: ${d.ok ? '<span style="color:var(--success)">✓ Correct</span>' : '<span style="color:var(--danger)">✗ Wrong</span>'} — Answer: ${d.chosen || '<em>none</em>'}</li>`;
       });
-      mcqList.appendChild(ul);
-      autoBreak.appendChild(mcqList);
+      mcqHTML += '</ul></div>';
+      autoBreak.innerHTML += mcqHTML;
 
       // True/False details
-      const tfList = document.createElement('div');
-      tfList.style.marginTop = '10px';
-      tfList.innerHTML = '<strong>True / False:</strong>';
-      const ul2 = document.createElement('ul');
+      let tfHTML = '<div style="margin-top:10px"><strong>True / False:</strong><ul style="margin-top:6px">';
       out.tfDetails.forEach((d,i)=>{
-        const li = document.createElement('li');
-        li.style.marginTop = '6px';
-        li.innerHTML = `Item ${i+1}: ${d.ok ? '<span style="color:var(--success)">Correct</span>' : '<span style="color:var(--danger)">Wrong</span>'} — Answer: ${d.chosen || '<em>none</em>'}`;
-        ul2.appendChild(li);
+        tfHTML += `<li style="margin-top:4px">Item ${i+1}: ${d.ok ? '<span style="color:var(--success)">✓ Correct</span>' : '<span style="color:var(--danger)">✗ Wrong</span>'} — Answer: ${d.chosen || '<em>none</em>'}</li>`;
       });
-      tfList.appendChild(ul2);
-      autoBreak.appendChild(tfList);
+      tfHTML += '</ul></div>';
+      autoBreak.innerHTML += tfHTML;
 
       // Fill-in details
-      const fillList = document.createElement('div');
-      fillList.style.marginTop = '10px';
-      fillList.innerHTML = '<strong>Fill-ins:</strong>';
-      const ul3 = document.createElement('ul');
+      let fillHTML = '<div style="margin-top:10px"><strong>Fill-ins:</strong><ul style="margin-top:6px">';
       out.fillDetails.forEach((f,i)=>{
-        const li = document.createElement('li');
-        li.style.marginTop = '6px';
-        li.innerHTML = `F${i+1}: ${f.ok ? '<span style="color:var(--success)">Correct</span>' : '<span style="color:var(--danger)">Wrong</span>'} — "${f.answer||'<em>none</em>'}"`;
-        ul3.appendChild(li);
+        fillHTML += `<li style="margin-top:4px">F${i+1}: ${f.ok ? '<span style="color:var(--success)">✓ Correct</span>' : '<span style="color:var(--danger)">✗ Wrong</span>'} — "${f.answer||'<em>none</em>'}"</li>`;
       });
-      fillList.appendChild(ul3);
-      autoBreak.appendChild(fillList);
+      fillHTML += '</ul></div>';
+      autoBreak.innerHTML += fillHTML;
 
-      // Written answers area
-      const wfb = document.getElementById('writtenFB');
-      wfb.innerHTML = `<div><strong>1.</strong> ${out.wa1 || '<em>none</em>'}</div><div style="margin-top:8px"><strong>2.</strong> ${out.wa2 || '<em>none</em>'}</div>`;
+      // Written answers
+      document.getElementById('writtenFB').innerHTML = `<div><strong>1.</strong> ${out.wa1 || '<em>none</em>'}</div><div style="margin-top:8px"><strong>2.</strong> ${out.wa2 || '<em>none</em>'}</div>`;
 
-      // modal metadata
+      // Modal metadata
       document.getElementById('modalSub').textContent = `${out.name ? out.name + (out.class ? ' • ' + out.class : '') : ''} ${out.date ? ' • ' + out.date : ''}`.trim();
 
-      // show modal
+      // Show modal
       openModal();
     }
 
@@ -596,93 +703,85 @@
       return div;
     }
 
-    /***** Modal open/close + focus trap *****/
-    const backdrop = document.getElementById('modalBackdrop');
-    const modalClose = document.getElementById('modalClose');
-    const modalRetry = document.getElementById('modalRetry');
+    /***** Modal functions *****/
     function openModal(){
-      backdrop.classList.add('show');
-      backdrop.setAttribute('aria-hidden','false');
-      modalClose.focus();
+      document.getElementById('modalBackdrop').classList.add('show');
       document.body.style.overflow = 'hidden';
-      document.addEventListener('focus', trapFocus, true);
+      feather.replace();
     }
+    
     function closeModal(){
-      backdrop.classList.remove('show');
-      backdrop.setAttribute('aria-hidden','true');
+      document.getElementById('modalBackdrop').classList.remove('show');
       document.body.style.overflow = '';
-      document.removeEventListener('focus', trapFocus, true);
     }
 
-    modalClose.addEventListener('click', ()=> closeModal());
-    modalRetry.addEventListener('click', ()=> {
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    
+    document.getElementById('modalRetry').addEventListener('click', function() {
       closeModal();
-      // scroll to top of first section
-      document.querySelector('#sec-a .acc-head').scrollIntoView({behavior:'smooth', block:'center'});
-      // clear auto-marked answers only
-      clearAutoMarked();
+      // Clear auto-marked answers
+      document.querySelectorAll('input[type="radio"]').forEach(r=> r.checked = false);
+      for(let i=1;i<=3;i++) document.getElementById('fb'+i).value = '';
+      // Scroll to first section
+      document.querySelector('.acc-item').scrollIntoView({behavior:'smooth', block:'center'});
+      showToast('Auto-marked answers cleared. Ready to retry!');
     });
 
-    // close on backdrop click outside modal
-    backdrop.addEventListener('click', (e)=>{
-      if(e.target === backdrop) closeModal();
+    // Close on backdrop click
+    document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+      if(e.target === this) closeModal();
     });
-    // close on ESC
-    document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
 
-    // focus trap helper
-    function trapFocus(e){
-      const modal = backdrop.querySelector('.modal');
-      if(!modal) return;
-      if(!modal.contains(e.target)) {
-        e.stopPropagation();
-        modalClose.focus();
+    // Close on ESC
+    document.addEventListener('keydown', function(e) {
+      if(e.key === 'Escape') closeModal();
+    });
+
+    /***** FIX 4: Clear button - NOW WORKING *****/
+    document.getElementById('clearBtn').addEventListener('click', function() {
+      if(confirm('Are you sure you want to clear all saved results?')) {
+        localStorage.removeItem('socialMediaResults');
+        showToast('✓ All saved results cleared!');
       }
-    }
-
-    /***** Clear / Print / Load saved *****/
-    document.getElementById('clearBtn').addEventListener('click', ()=> {
-      localStorage.removeItem('socialMediaResults');
-      showToast('Saved results cleared.');
     });
 
-    document.getElementById('printBtn').addEventListener('click', ()=> {
-      // open modal with last saved results if available then print
+    /***** FIX 5: Print button - NOW WORKING *****/
+    document.getElementById('printBtn').addEventListener('click', function() {
       const raw = localStorage.getItem('socialMediaResults');
       if(raw){
         try {
           const store = JSON.parse(raw);
-          if(store.last) showResults(store);
-        } catch(e){}
+          if(store.last) {
+            showResults(store);
+            setTimeout(function() {
+              window.print();
+            }, 500);
+          } else {
+            showToast('⚠ No results to print. Submit the assessment first!');
+          }
+        } catch(e){
+          showToast('⚠ No results to print. Submit the assessment first!');
+        }
+      } else {
+        showToast('⚠ No results to print. Submit the assessment first!');
       }
-      setTimeout(()=> window.print(), 220);
     });
 
-    // load saved on open (do not auto-show)
-    window.addEventListener('DOMContentLoaded', ()=> {
-      try {
-        const raw = localStorage.getItem('socialMediaResults');
-        if(raw){ const store = JSON.parse(raw); if(store.last) { /* do not auto show modal */ } }
-      } catch(e){}
-    });
-
-    // small toast (non-blocking)
+    /***** Toast notification *****/
     function showToast(msg, ms=2800){
-      const t = document.createElement('div'); t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='20px';
-      t.style.background='linear-gradient(90deg,var(--primary),#3f74d8)'; t.style.color='white'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.boxShadow='0 10px 30px rgba(91,141,239,0.18)';
-      t.textContent = msg; t.style.zIndex = 1400;
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
       document.body.appendChild(t);
-      setTimeout(()=> t.remove(), ms);
+      setTimeout(function() {
+        t.remove();
+      }, ms);
     }
 
-    // clear only auto-marked fields helper
-    function clearAutoMarked(){
-      // clear MCQs & TFs
-      document.querySelectorAll('input[type="radio"]').forEach(r=> r.checked = false);
-      // clear fill-ins
-      for(let i=1;i<=3;i++) document.getElementById('fb'+i).value = '';
-      showToast('Auto-marked answers cleared.');
-    }
+    // Load saved results on page load (don't auto-show modal)
+    window.addEventListener('DOMContentLoaded', function() {
+      feather.replace();
+    });
   </script>
 </body>
 </html>

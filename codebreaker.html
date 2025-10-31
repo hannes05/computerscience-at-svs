@@ -26,27 +26,87 @@
     }
 
     .glow-correct {
+      animation: pulseGreen 0.5s ease-in-out;
       box-shadow: 0 0 15px rgba(74, 222, 128, 0.7);
     }
 
     .glow-wrong {
+      animation: pulseRed 0.5s ease-in-out;
       box-shadow: 0 0 15px rgba(248, 113, 113, 0.7);
     }
 
-    .mc-option {
+    @keyframes pulseGreen {
+      0%, 100% { box-shadow: 0 0 15px rgba(74, 222, 128, 0.7); }
+      50% { box-shadow: 0 0 25px rgba(74, 222, 128, 1); }
+    }
+
+    @keyframes pulseRed {
+      0%, 100% { box-shadow: 0 0 15px rgba(248, 113, 113, 0.7); }
+      50% { box-shadow: 0 0 25px rgba(248, 113, 113, 1); }
+    }
+
+    .draggable-word {
       transition: all 0.2s ease-in-out;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
     }
 
-    .mc-correct {
-      background-color: rgba(74, 222, 128, 0.2);
-      border-color: #4ade80;
-      box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+    .draggable-word:hover {
+      transform: translateY(-2px);
     }
 
-    .mc-incorrect {
-      background-color: rgba(248, 113, 113, 0.2);
-      border-color: #f87171;
-      box-shadow: 0 0 8px rgba(248, 113, 113, 0.5);
+    .draggable-word.dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+
+    .draggable-word.used {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .blank-drop {
+      min-width: 120px;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      border: 2px dashed rgba(59, 130, 246, 0.3);
+    }
+
+    .blank-drop.drag-over {
+      background-color: rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      transform: scale(1.05);
+    }
+
+    .blank-drop.filled {
+      background-color: rgba(59, 130, 246, 0.15);
+      border-style: solid;
+      cursor: pointer;
+    }
+
+    .blank-drop.filled:hover {
+      background-color: rgba(59, 130, 246, 0.25);
+    }
+
+    /* Mobile mode - tap to select */
+    .mobile-mode .draggable-word.selected {
+      background-color: #3b82f6;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+    }
+
+    .mobile-mode .blank-drop.target-mode {
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { border-color: rgba(59, 130, 246, 0.5); }
+      50% { border-color: rgba(59, 130, 246, 1); }
     }
 
     @media (max-width: 640px) {
@@ -54,6 +114,27 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
       }
+      
+      .code-block {
+        font-size: 0.875rem;
+      }
+    }
+
+    /* Score animation */
+    @keyframes scorePopup {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .score-popup {
+      animation: scorePopup 0.5s ease-out;
+    }
+
+    /* Instructions banner */
+    .instruction-banner {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+      border-left: 4px solid #3b82f6;
     }
   </style>
 </head>
@@ -69,13 +150,13 @@
 
       <div class="flex items-center space-x-4">
         <span class="text-yellow-400 flex items-center">
-          <i data-feather="star" class="w-5 h-5 mr-1"></i> 150 XP
+          <i data-feather="star" class="w-5 h-5 mr-1"></i> <span id="xpDisplay">0</span> XP
         </span>
-        <span class="text-blue-400 flex items-center">
-          <i data-feather="battery" class="w-5 h-5 mr-1"></i> 3/3 Lives
+        <span class="text-green-400 flex items-center">
+          <i data-feather="check-circle" class="w-5 h-5 mr-1"></i> <span id="scoreDisplay">0/10</span>
         </span>
         <!-- Dark Mode Toggle -->
-        <button id="themeToggle" class="ml-4 p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition" title="Toggle Dark/Light Mode">
+        <button id="themeToggle" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition" title="Toggle Dark/Light Mode">
           <i data-feather="sun" id="themeIcon"></i>
         </button>
       </div>
@@ -83,18 +164,33 @@
 
     <!-- Title -->
     <div class="text-center mb-10 sm:mb-12">
-      <h1 class="text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">CODE BREAKER</h1>
-      <p class="text-base sm:text-lg text-blue-300 dark:text-blue-300 text-blue-700 max-w-2xl mx-auto">
-        Repair the corrupted OS files and answer the security questions to gain full access.
+      <h1 class="text-3xl sm:text-5xl font-bold mb-2 text-yellow-400">CODE BREAKER</h1>
+      <p class="text-base sm:text-lg text-blue-300 max-w-2xl mx-auto">
+        Repair the corrupted OS files by filling in the missing terms.
       </p>
     </div>
 
+    <!-- Instructions Banner -->
+    <div class="max-w-4xl mx-auto mb-6 instruction-banner p-4 rounded-lg">
+      <div class="flex items-start gap-3">
+        <i data-feather="info" class="w-5 h-5 text-blue-400 flex-shrink-0 mt-1"></i>
+        <div>
+          <p class="text-sm sm:text-base font-semibold text-blue-300 mb-1">How to Play:</p>
+          <p class="text-xs sm:text-sm text-gray-300">
+            <span class="hidden sm:inline">🖱️ Desktop: Drag words from the bank into the blanks.</span>
+            <span class="sm:hidden">📱 Mobile: Tap a word, then tap a blank to fill it.</span>
+            <span class="ml-2">💡 Tap filled blanks to clear them.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Card -->
-    <div class="max-w-4xl mx-auto bg-gray-900 dark:bg-gray-900 bg-opacity-90 p-6 sm:p-8 rounded-lg shadow-xl border border-gray-700">
+    <div class="max-w-4xl mx-auto bg-gray-900 bg-opacity-90 p-6 sm:p-8 rounded-lg shadow-xl border border-gray-700">
 
       <!-- Section 1 -->
       <h2 class="text-xl sm:text-2xl font-bold mb-6 text-green-400 border-b border-gray-700 pb-2 flex items-center">
-        <i data-feather="terminal" class="w-6 h-6 mr-2"></i> Section 1: Drag & Drop File Repair
+        <i data-feather="terminal" class="w-6 h-6 mr-2"></i> File Repair Challenge
       </h2>
 
       <!-- Word Bank -->
@@ -102,148 +198,341 @@
         <h3 class="text-base sm:text-lg font-bold mb-3 text-blue-300 flex items-center">
           <i data-feather="archive" class="w-5 h-5 mr-2"></i> Word Bank
         </h3>
-        <div class="flex flex-wrap gap-3" id="wordBank">
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">device driver</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">operating system</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">hardware</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">system</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">graphical user interface</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">kernel</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">command line interface</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">multitasking</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">protocol</span>
-          <span class="px-4 py-2 bg-gray-700 rounded-full cursor-grab hover:bg-gray-600 draggable-word" draggable="true">software</span>
+        <div class="flex flex-wrap gap-2 sm:gap-3" id="wordBank">
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="device driver">device driver</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="operating system">operating system</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="hardware">hardware</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="system">system</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="graphical user interface">graphical user interface</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="kernel">kernel</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="command line interface">command line interface</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="multitasking">multitasking</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="protocol">protocol</span>
+          <span class="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 draggable-word" data-word="software">software</span>
         </div>
       </div>
 
       <!-- File Repair Questions -->
-      <div class="space-y-6 text-sm sm:text-base">
-        <div class="code-block p-4 rounded-lg">
-          The <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="operating system">_____</span> manages the
-          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="hardware">_____</span> and
-          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="software">_____</span> resources of a computer.
+      <div class="space-y-4 sm:space-y-6 text-sm sm:text-base">
+        <div class="code-block p-3 sm:p-4 rounded-lg">
+          The <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="operating system">_____</span> manages the
+          <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="hardware">_____</span> and
+          <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="software">_____</span> resources of a computer.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
-          The <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="kernel">_____</span> is the core part of the
+        <div class="code-block p-3 sm:p-4 rounded-lg">
+          The <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="kernel">_____</span> is the core part of the
           operating system that controls everything in the system.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
-          A <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="device driver">_____</span> acts as a translator
+        <div class="code-block p-3 sm:p-4 rounded-lg">
+          A <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="device driver">_____</span> acts as a translator
           between the OS and a piece of hardware.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
-          A <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="graphical user interface">_____</span> allows users
+        <div class="code-block p-3 sm:p-4 rounded-lg">
+          A <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="graphical user interface">_____</span> allows users
           to interact with icons and windows instead of typing text commands.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
-          The <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="command line interface">_____</span> lets users
+        <div class="code-block p-3 sm:p-4 rounded-lg">
+          The <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="command line interface">_____</span> lets users
           type specific text commands to control the computer.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
+        <div class="code-block p-3 sm:p-4 rounded-lg">
           An operating system that can run multiple programs at once is said to support
-          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="multitasking">_____</span>.
+          <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="multitasking">_____</span>.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
+        <div class="code-block p-3 sm:p-4 rounded-lg">
           Network communication between systems is managed using a set of rules known as a
-          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="protocol">_____</span>.
+          <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="protocol">_____</span>.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
-          A computer’s physical components, such as the CPU and memory, are referred to as
-          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="hardware">_____</span>.
+        <div class="code-block p-3 sm:p-4 rounded-lg">
+          A computer's physical components, such as the CPU and memory, are referred to as
+          <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="hardware">_____</span>.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
+        <div class="code-block p-3 sm:p-4 rounded-lg">
           Programs and data that run on the computer are called
-          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="software">_____</span>.
+          <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="software">_____</span>.
         </div>
 
-        <div class="code-block p-4 rounded-lg">
+        <div class="code-block p-3 sm:p-4 rounded-lg">
           Together, hardware and software form a complete computer
-          <span class="blank-drop px-2 bg-gray-700 rounded" data-answer="system">_____</span>.
+          <span class="blank-drop px-2 py-1 bg-gray-700 rounded text-center" data-answer="system">_____</span>.
         </div>
       </div>
 
-      <!-- Submit -->
-      <div class="mt-10 text-center">
+      <!-- Action Buttons -->
+      <div class="mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4">
         <button id="submitBtn"
-          class="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all flex items-center justify-center mx-auto">
+          class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all flex items-center justify-center">
           <i data-feather="check-circle" class="w-5 h-5 mr-2"></i> Verify File Repair
+        </button>
+        <button id="resetBtn"
+          class="flex-1 sm:flex-none px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg transition-all flex items-center justify-center">
+          <i data-feather="rotate-ccw" class="w-5 h-5 mr-2"></i> Reset
         </button>
       </div>
     </div>
   </div>
 
-<!-- Floating Glowing Back Button -->
-<a href="index.html"
-   class="group fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50">
-  <i data-feather="home" class="w-6 h-6 group-hover:text-yellow-300 transition-colors"></i>
-  <span class="sr-only">Back to Main Page</span>
-</a>
+  <!-- Floating Home Button -->
+  <a href="index.html"
+     class="fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_35px_rgba(37,99,235,0.9)] transition-all duration-300 hover:scale-110 z-50">
+    <i data-feather="home" class="w-6 h-6"></i>
+  </a>
 
+  <!-- Result Modal -->
+  <div id="resultModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50 p-4">
+    <div class="bg-gray-900 border-2 border-blue-500 rounded-lg p-6 sm:p-8 max-w-md w-full score-popup">
+      <div class="text-center">
+        <div class="mb-4">
+          <i data-feather="award" class="w-16 h-16 mx-auto text-yellow-400"></i>
+        </div>
+        <h3 class="text-2xl sm:text-3xl font-bold mb-2" id="resultTitle">Great Job!</h3>
+        <p class="text-4xl sm:text-5xl font-bold mb-4" id="resultScore">8/10</p>
+        <p class="text-gray-300 mb-2" id="resultMessage">Keep going!</p>
+        <p class="text-yellow-400 text-xl font-bold mb-6" id="resultXP">+80 XP</p>
+        <button id="closeModal" class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition">
+          Continue
+        </button>
+      </div>
+    </div>
+  </div>
 
-  <!-- JavaScript -->
-  <script src="https://unpkg.com/feather-icons"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    feather.replace();
+
+    // State
+    let selectedWord = null;
+    let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+    let totalXP = 0;
+    let currentScore = 0;
+
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const html = document.documentElement;
+
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      themeIcon.setAttribute('data-feather', html.classList.contains('dark') ? 'sun' : 'moon');
       feather.replace();
+    });
 
-      // Theme toggle
-      const themeToggle = document.getElementById('themeToggle');
-      const themeIcon = document.getElementById('themeIcon');
-      const html = document.documentElement;
+    // Add mobile mode class
+    if (isMobile) {
+      document.body.classList.add('mobile-mode');
+    }
 
-      themeToggle.addEventListener('click', () => {
-        html.classList.toggle('dark');
-        themeIcon.setAttribute('data-feather', html.classList.contains('dark') ? 'sun' : 'moon');
-        feather.replace();
-      });
+    const draggableWords = document.querySelectorAll('.draggable-word');
+    const blankDrops = document.querySelectorAll('.blank-drop');
 
-      // Drag and Drop
-      const draggableWords = document.querySelectorAll('.draggable-word');
-      const blankDrops = document.querySelectorAll('.blank-drop');
-
+    // Desktop: Drag and Drop
+    if (!isMobile) {
       draggableWords.forEach(word => {
+        word.setAttribute('draggable', 'true');
+        
         word.addEventListener('dragstart', e => {
-          e.dataTransfer.setData('text/plain', word.textContent);
-          word.classList.add('opacity-50');
+          e.dataTransfer.setData('text/plain', word.dataset.word);
+          word.classList.add('dragging');
         });
-        word.addEventListener('dragend', () => word.classList.remove('opacity-50'));
+        
+        word.addEventListener('dragend', () => {
+          word.classList.remove('dragging');
+        });
       });
 
       blankDrops.forEach(blank => {
-        blank.addEventListener('dragover', e => e.preventDefault());
+        blank.addEventListener('dragover', e => {
+          e.preventDefault();
+          blank.classList.add('drag-over');
+        });
+        
+        blank.addEventListener('dragleave', () => {
+          blank.classList.remove('drag-over');
+        });
+        
         blank.addEventListener('drop', e => {
           e.preventDefault();
+          blank.classList.remove('drag-over');
           const data = e.dataTransfer.getData('text/plain');
-          blank.textContent = data;
-          blank.dataset.currentWord = data;
+          fillBlank(blank, data);
+        });
+
+        // Click to clear
+        blank.addEventListener('click', () => {
+          if (blank.classList.contains('filled')) {
+            clearBlank(blank);
+          }
+        });
+      });
+    }
+
+    // Mobile/Touch: Tap to select and fill
+    if (isMobile) {
+      draggableWords.forEach(word => {
+        word.addEventListener('click', () => {
+          // Deselect all
+          draggableWords.forEach(w => w.classList.remove('selected'));
+          blankDrops.forEach(b => b.classList.remove('target-mode'));
+          
+          // Select this word
+          if (!word.classList.contains('used')) {
+            selectedWord = word.dataset.word;
+            word.classList.add('selected');
+            
+            // Highlight empty blanks
+            blankDrops.forEach(b => {
+              if (!b.classList.contains('filled')) {
+                b.classList.add('target-mode');
+              }
+            });
+          }
         });
       });
 
-      // Submit answers
-      document.getElementById('submitBtn').addEventListener('click', () => {
-        let correct = 0;
-        blankDrops.forEach(blank => {
-          const user = (blank.dataset.currentWord || '').trim().toLowerCase();
-          const ans = blank.dataset.answer.trim().toLowerCase();
-          blank.classList.remove('bg-green-800', 'bg-red-800', 'glow-correct', 'glow-wrong');
-          if (user === ans) {
-            blank.classList.add('bg-green-800', 'glow-correct');
-            correct++;
-          } else {
-            blank.classList.add('bg-red-800', 'glow-wrong');
+      blankDrops.forEach(blank => {
+        blank.addEventListener('click', () => {
+          if (selectedWord && !blank.classList.contains('filled')) {
+            fillBlank(blank, selectedWord);
+            
+            // Deselect
+            draggableWords.forEach(w => w.classList.remove('selected'));
+            blankDrops.forEach(b => b.classList.remove('target-mode'));
+            selectedWord = null;
+          } else if (blank.classList.contains('filled')) {
+            // Clear on tap
+            clearBlank(blank);
           }
         });
-        alert(`You got ${correct}/${blankDrops.length} correct.`);
       });
+    }
+
+    function fillBlank(blank, wordText) {
+      blank.textContent = wordText;
+      blank.dataset.currentWord = wordText;
+      blank.classList.add('filled');
+      
+      // Mark word as used
+      draggableWords.forEach(w => {
+        if (w.dataset.word === wordText && !w.classList.contains('used')) {
+          w.classList.add('used');
+        }
+      });
+      
+      updateScore();
+    }
+
+    function clearBlank(blank) {
+      const wordText = blank.dataset.currentWord;
+      blank.textContent = '_____';
+      blank.dataset.currentWord = '';
+      blank.classList.remove('filled', 'bg-green-800', 'bg-red-800', 'glow-correct', 'glow-wrong');
+      
+      // Unmark word
+      draggableWords.forEach(w => {
+        if (w.dataset.word === wordText) {
+          w.classList.remove('used');
+        }
+      });
+      
+      updateScore();
+    }
+
+    function updateScore() {
+      let filled = 0;
+      blankDrops.forEach(blank => {
+        if (blank.classList.contains('filled')) filled++;
+      });
+      document.getElementById('scoreDisplay').textContent = `${filled}/10`;
+    }
+
+    // Submit
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      let correct = 0;
+      let total = blankDrops.length;
+      
+      blankDrops.forEach(blank => {
+        const user = (blank.dataset.currentWord || '').trim().toLowerCase();
+        const ans = blank.dataset.answer.trim().toLowerCase();
+        blank.classList.remove('bg-green-800', 'bg-red-800', 'glow-correct', 'glow-wrong');
+        
+        if (user === ans) {
+          blank.classList.add('bg-green-800', 'glow-correct');
+          correct++;
+        } else if (user) {
+          blank.classList.add('bg-red-800', 'glow-wrong');
+        }
+      });
+      
+      currentScore = correct;
+      const earnedXP = correct * 15;
+      totalXP += earnedXP;
+      
+      // Update displays
+      document.getElementById('xpDisplay').textContent = totalXP;
+      
+      // Show modal
+      showResultModal(correct, total, earnedXP);
     });
+
+    function showResultModal(correct, total, xp) {
+      const modal = document.getElementById('resultModal');
+      const title = document.getElementById('resultTitle');
+      const score = document.getElementById('resultScore');
+      const message = document.getElementById('resultMessage');
+      const xpDisplay = document.getElementById('resultXP');
+      
+      score.textContent = `${correct}/${total}`;
+      xpDisplay.textContent = `+${xp} XP`;
+      
+      if (correct === total) {
+        title.textContent = 'Perfect! 🎉';
+        message.textContent = 'All files repaired successfully!';
+        title.className = 'text-2xl sm:text-3xl font-bold mb-2 text-green-400';
+      } else if (correct >= total * 0.7) {
+        title.textContent = 'Great Job! ✨';
+        message.textContent = 'Most files repaired correctly!';
+        title.className = 'text-2xl sm:text-3xl font-bold mb-2 text-blue-400';
+      } else {
+        title.textContent = 'Keep Trying! 💪';
+        message.textContent = 'Review and try again!';
+        title.className = 'text-2xl sm:text-3xl font-bold mb-2 text-yellow-400';
+      }
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      feather.replace();
+    }
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+      document.getElementById('resultModal').classList.add('hidden');
+      document.getElementById('resultModal').classList.remove('flex');
+    });
+
+    // Reset
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if (confirm('Reset all answers?')) {
+        blankDrops.forEach(blank => {
+          blank.textContent = '_____';
+          blank.dataset.currentWord = '';
+          blank.classList.remove('filled', 'bg-green-800', 'bg-red-800', 'glow-correct', 'glow-wrong');
+        });
+        
+        draggableWords.forEach(w => w.classList.remove('used', 'selected'));
+        selectedWord = null;
+        updateScore();
+      }
+    });
+
+    // Initialize
+    feather.replace();
+    updateScore();
   </script>
 </body>
 </html>
